@@ -5,6 +5,7 @@ using OCDD.Services;
 using OCDD.Services.Utility;
 using OCDD.Controllers;
 using OCDD.Models;
+using Org.BouncyCastle.Bcpg;
 
 /*
  * Dakoda Meade
@@ -42,28 +43,25 @@ namespace OCDD.Controllers
 		[LogActionFilter]
 		public IActionResult ProcessLogin(UserModel user)
 		{
-			//logger.Info("Entering the process login method");
-			//logger.Info("Parameter: " + user.ToString());
-			//MyLogger.GetInstance().Info("Entering the process login method");
-			//MyLogger.GetInstance().Info("Parameter: " + user.ToString());
+			
 			SecurityService securityService = new SecurityService();
 			if (securityService.IsValid(user))
 			{
-				// login/loginsuccess
-				//logger.Info("Login Success");
-				MyLogger.GetInstance().Info("Login Success");
+				
 
 				// remember who logged in
-				//HttpContext.Session.SetString("username", user.username);
-				return View("LoginSuccess", user);
+				int userID = securityService.GetUserId(user);
+				HttpContext.Session.SetString("userID", userID.ToString());
+                user = securityService.GetUserById(userID);
+                user.userID = userID;
+                HttpContext.Session.SetString("userRole", user.role);
+                return View("LoginSuccess", user);
 			}
 			else
 			{
-				// login/loginfailure
-				//logger.Info("Login Failure");
-				//MyLogger.GetInstance().Info("Login Failure");
+				
 
-				HttpContext.Session.Remove("username");
+				HttpContext.Session.Remove("userID");
 				return View("LoginFailure", user);
 			}
 		}

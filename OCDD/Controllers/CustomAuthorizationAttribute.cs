@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 /*
  * Dakoda Meade
  * CST-350
- * Activity 6-2
+ * 
  * Custom autorize attribute filter
  * 
  */

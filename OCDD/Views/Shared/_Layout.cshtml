@@ -1,18 +1,20 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - RegisterAndLoginApp</title>
+    <title>@ViewData["Title"] - OCDDetailing</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/RegisterAndLoginApp.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/OCDD.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">RegisterAndLoginApp</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">OCDD</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -23,9 +25,47 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="ScheduleAppointment" asp-action="Index">Schedule Appointment</a>
                         </li>
-                    </ul>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Reviews" asp-action="Reviews">Reviews</a>
+                        </li>
+                     </ul>
+                     @if (HttpContextAccessor.HttpContext.Session.GetString("userID") != null)
+                     {
+                     <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="MyAppointments" asp-action="Index">My Appointments</a>
+                        </li>
+                        @if (HttpContextAccessor.HttpContext.Session.GetString("userRole") == "Admin")
+                        {
+                            <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="AdminDashboard" asp-action="Index">Admin Dashboard</a>
+                            </li>
+                        }
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Profile" asp-action="Index">Profile</a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link text-dark" href="javascript:void(0);" onclick="confirmLogout()">Logout</a>
+                            <form id="logoutForm" asp-controller="Profile" asp-action="Logout" method="post" style="display:none;">
+                                @Html.AntiForgeryToken()
+                                <input type="submit" />
+                            </form>
+                        </li>
+                      </ul>   
+                    }
+                    else
+                    {
+                      <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Login</a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Register" asp-action="Index">Register</a>
+                        </li>
+                      </ul>                
+                    }
                 </div>
             </div>
         </nav>
@@ -36,11 +76,28 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted fixed-footer">
         <div class="container">
-            &copy; 2023 - RegisterAndLoginApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2024 - One Clean Dude Detailing - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            
         </div>
+          <div class="container">
+            Contact
+                
+                Phone: 123-123-1234
+                Email: 1234@outlook.com
+          </div>
     </footer>
+    <script>
+    function confirmLogout() 
+    {
+       
+        if (confirm("Are you sure you want to log out?")) 
+        {
+            document.getElementById('logoutForm').submit();
+         }
+    }
+</script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

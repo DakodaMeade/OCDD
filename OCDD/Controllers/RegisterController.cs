@@ -18,6 +18,27 @@ namespace OCDD.Controllers
             return View();
         }
 
+        public IActionResult RegisterFromAppointment(string name, string email, string phoneNumber, string address, int zipCode, string city, string state)
+        {
+            // Create an instance of UserModel
+            var user = new UserModel
+            {
+                name = name,
+                email = email,
+                phoneNumber = phoneNumber,
+                address = address,
+                zipCode = zipCode,
+                city = city,
+                state = state
+            };
+            
+
+            // Process the appointment model here
+
+            return View("Index", user); // Or redirect to another action/view
+        }
+
+
         //   register/ProcessRegister
         // This handles the post register view
         public IActionResult ProcessRegister(UserModel user)

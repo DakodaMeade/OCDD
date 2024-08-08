@@ -32,15 +32,26 @@ namespace OCDD.Services
 
 
         // Method for getting the user id
-        //public int GetUserId(UserModel user)
-        //{
-        //    return securityDAO.GetUserIdUsingUsernameAndPassword(user);
-        //}
+        public int GetUserId(UserModel user)
+        {
+            return securityDAO.FindUserIDByEmail(user);
+        }
 
-        // Method for getting the returninf the user from the id
-        //public UserModel GetUser(int userId)
-        //{
-        //    return securityDAO.FindUserById(userId);
-        //}
+        //Method for getting the returninf the user from the id
+        public UserModel GetUserById(int userId)
+        {
+            return securityDAO.GetUserById(userId);
+        }
+
+        
+        public void UpdateProfile(UserModel user) 
+        {
+            securityDAO.UpdateProfile(user);
+        }
+
+        public void UpdatePassword(UserModel user)
+        {
+            securityDAO.UpdatePassword(user);
+        }
     }
 }

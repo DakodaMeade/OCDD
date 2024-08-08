@@ -495,3 +495,11 @@ D:\School\GCU\CST-451 Projects\OCDD\OCDD\bin\Debug\net8.0\runtimes\win\lib\net8.
 D:\School\GCU\CST-451 Projects\OCDD\OCDD\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
 D:\School\GCU\CST-451 Projects\OCDD\OCDD\bin\Debug\net8.0\MySqlConnector.dll
 D:\School\GCU\CST-451 Projects\OCDD\OCDD\bin\Debug\net8.0\Pomelo.EntityFrameworkCore.MySql.dll
+D:\School\GCU\CST-451 Projects\OCDD\OCDD\bin\Debug\net8.0\Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore.dll
+D:\School\GCU\CST-451 Projects\OCDD\OCDD\bin\Debug\net8.0\System.Web.Mvc.dll
+D:\School\GCU\CST-451 Projects\OCDD\OCDD\bin\Debug\net8.0\System.Web.Razor.dll
+D:\School\GCU\CST-451 Projects\OCDD\OCDD\bin\Debug\net8.0\System.Web.Helpers.dll
+D:\School\GCU\CST-451 Projects\OCDD\OCDD\bin\Debug\net8.0\System.Web.WebPages.Deployment.dll
+D:\School\GCU\CST-451 Projects\OCDD\OCDD\bin\Debug\net8.0\System.Web.WebPages.Razor.dll
+D:\School\GCU\CST-451 Projects\OCDD\OCDD\bin\Debug\net8.0\System.Web.WebPages.dll
+D:\School\GCU\CST-451 Projects\OCDD\OCDD\bin\Debug\net8.0\Microsoft.Web.Infrastructure.dll

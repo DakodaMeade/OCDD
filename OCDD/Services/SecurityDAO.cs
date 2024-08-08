@@ -5,11 +5,10 @@ using OCDD.Models;
 using System.Data.SqlClient;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 /*
  * Dakoda Meade
- * CST-350
- * Activity 2-2
- * SecurityDAO class that checks if a usere existes in the databse
+ * SecurityDAO classworking with user information in database
  */
 namespace OCDD.Services
 {
@@ -23,74 +22,16 @@ namespace OCDD.Services
         string connectionString = "Server=127.0.0.1;Database=ocddetailing_db;User ID=root;Password=root;Pooling=false;";
 
 
-
-        /// <summary>
-        /// This method is for looking up users in the database
-        /// takes a usermodel object as a parameter
-        /// </summary>
-        /// <param name="user"></param>
-        /// <returns>if a user is valid or not</returns>
-        /// 
-        /*public bool FindByEmailAndPassword(UserModel user)
-		{
-			//assume nothing is found
-			bool success = false;
-
-			// uses prpared statements for security. @username and @ password are defined below 
-			string sqlStatement = "SELECT * FROM dbo.USERS WHERE username = @username and password = @password";
-			// used to store the password from he database
-            string storedHashedPassword = null;
-
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
-			{
-				
-
-				try
-				{	
-					MySqlCommand command = new MySqlCommand(sqlStatement, connection);
-
-					//define the values of the two placeholers in the sqlStatment string
-
-					command.Parameters.Add("@email", (MySqlDbType)System.Data.SqlDbType.VarChar, 50).Value = user.email;
-					command.Parameters.Add("@password", (MySqlDbType)System.Data.SqlDbType.VarChar, 50).Value = user.password;
-					connection.Open();
-                    Console.WriteLine("Connection to database is successful!");
-                    MySqlDataReader reader = command.ExecuteReader();
-
-					if (reader.HasRows)
-					{
-						//user is valid else false
-						storedHashedPassword = reader["password"] as string;
-						
-					}
-				}
-				catch (Exception ex)
-				{
-					Console.WriteLine(ex.ToString());
-                    Console.WriteLine("Connection to database is Not successful!");
-                };
-
-                if (storedHashedPassword != null)
-                {
-                    // Hash the provided password and compare it with the stored hash
-                    string hashedPassword = HashPassword(user.password);
-                    return hashedPassword == storedHashedPassword;
-                }
-
-
-            }
-			// return
-			return success;
-		}*/
         public bool FindByEmailAndPassword(UserModel user)
         {
             bool success = false;
             string sqlStatement = "SELECT password FROM Users WHERE email = @email";
 
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            try
             {
-                try
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
+
                     MySqlCommand command = new MySqlCommand(sqlStatement, connection);
 
                     // Use AddWithValue for MySQL parameters
@@ -113,56 +54,80 @@ namespace OCDD.Services
                             success = hashedPassword == storedHashedPassword;
                         }
                     }
+
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                    Console.WriteLine("Connection to database is Not successful!");
-                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Console.WriteLine("Connection to database is Not successful!");
             }
 
             return success;
         }
-        /*
-		// Method to add a new user to the database
-		public bool AddUser(UserModel user)
-		{
-			bool success = false;
 
-			string sqlStatement = "INSERT INTO dbo.Users (name, phoneNumber, address, zipCode, city, state, email, password) values (@name, @phoneNumber, @address, @zipCode, @city, @state, @email, @password)";
+        // returns a complete UserModel based on a user's Id
+        public UserModel GetUserById(int userId)
+        {
+            UserModel resultUser = null;
 
-			using (MySqlConnection connection = new MySqlConnection(connectionString))
-			{
-				try
-				{
-					MySqlCommand command = new MySqlCommand(sqlStatement, connection);
+            //string sqlStatement = "SELECT * FROM Users WHERE userID = @userId";
+            // Updated SQL statement with JOIN
+            string sqlStatement = @"
+            SELECT u.*, r.name AS roleName
+            FROM Users u
+            JOIN Roles r ON u.roleID = r.roleID
+            WHERE u.userID = @userId";
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    MySqlCommand command = new MySqlCommand(sqlStatement, connection);
 
-					command.Parameters.Add("@Name", (MySqlDbType)System.Data.SqlDbType.VarChar, 20).Value = user.name;
-					command.Parameters.Add("@PhoneNumber", (MySqlDbType)System.Data.SqlDbType.Int).Value = user.phoneNumber;
-					command.Parameters.Add("@Address", (MySqlDbType)System.Data.SqlDbType.VarChar, 20).Value = user.address;
-					command.Parameters.Add("@ZipCode", (MySqlDbType)System.Data.SqlDbType.Int).Value = user.zipCode;
-                    command.Parameters.Add("@City", (MySqlDbType)System.Data.SqlDbType.VarChar, 20).Value = user.city;
-                    command.Parameters.Add("@State", (MySqlDbType)System.Data.SqlDbType.VarChar, 2).Value = user.state;
-					command.Parameters.Add("@Email", (MySqlDbType)System.Data.SqlDbType.VarChar, 40).Value = user.email;
+                    command.Parameters.Add("@userId", MySqlDbType.Int32).Value = userId;
 
-					// Hash password for more security before storing in the database
-					string hashedPassword = HashPassword(user.password);
 
-					command.Parameters.Add("@password", (MySqlDbType)System.Data.SqlDbType.VarChar, 64).Value = hashedPassword;
+                    connection.Open();
+                    MySqlDataReader reader = command.ExecuteReader();
 
-					connection.Open();
-					//SqlDataReader reader = command.ExecuteReader();
-					command.ExecuteNonQuery();
-					success = true;
-				}
-				catch (Exception ex)
-				{
-					Console.WriteLine(ex.Message);
-				}
-			}
-			return success;
+                    if (reader.HasRows)
+                    {
+                        reader.Read(); // Move to the first (and only) row
 
-		}*/
+                        // Assuming UserId is an integer, adjust the column name accordingly
+                        int id = reader.GetInt32(reader.GetOrdinal("userID"));
+                            // Assuming other properties in UserModel, adjust accordingly
+                        string name = reader.GetString(reader.GetOrdinal("name"));
+                        string phoneNumber = reader.GetString(reader.GetOrdinal("phoneNumber"));
+                        string address = reader.GetString(reader.GetOrdinal("address"));
+                        int zipCode = reader.GetInt32(reader.GetOrdinal("zipCode"));
+                        string city = reader.GetString(reader.GetOrdinal("city"));
+                        string state = reader.GetString(reader.GetOrdinal("state"));
+                        string email = reader.GetString(reader.GetOrdinal("email"));
+                        string roleName = reader.GetString(reader.GetOrdinal("roleName"));
+                        resultUser = new UserModel
+                        {
+                            userID = userId,
+                            name = name,
+                            phoneNumber = phoneNumber,
+                            address = address,
+                            zipCode = zipCode,
+                            state = state,
+                            email = email,
+                            city = city,
+                            role = roleName,
+                        };
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return resultUser;
+        }
 
         // Method to add a new user to the database
         public void AddUser(UserModel user)
@@ -170,11 +135,13 @@ namespace OCDD.Services
             
             string sqlStatement = "INSERT INTO Users (name, phoneNumber, address, zipCode, city, state, email, password) VALUES (@name, @phoneNumber, @address, @zipCode, @city, @state, @email, @password)";
 
-            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            try
             {
-                try
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
+
                     MySqlCommand command = new MySqlCommand(sqlStatement, connection);
+
                     command.Parameters.AddWithValue("@name", user.name);
                     command.Parameters.AddWithValue("@phoneNumber", user.phoneNumber);
                     command.Parameters.AddWithValue("@address", user.address);
@@ -189,15 +156,14 @@ namespace OCDD.Services
 
                     connection.Open();
                     command.ExecuteNonQuery();
-                    
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
+
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
-          
         }
 
         public bool FindUserByEmail(UserModel user)
@@ -205,33 +171,134 @@ namespace OCDD.Services
             // set exists = false 
             bool exists = false;
             // select if user name or email matches
-            string sqlStatement = "SELECT * FROM dbo.Users WHERE email = @email";
+            string sqlStatement = "SELECT * FROM Users WHERE email = @email";
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            try
             {
-                SqlCommand command = new SqlCommand(sqlStatement, connection);
-
-               
-                command.Parameters.Add("@email", System.Data.SqlDbType.VarChar, 40).Value = user.email;
-
-                try
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
+                    MySqlCommand command = new MySqlCommand(sqlStatement, connection);
+
+
+                    command.Parameters.Add("@email", MySqlDbType.VarChar, 40).Value = user.email;
+
                     connection.Open();
-                    SqlDataReader reader = command.ExecuteReader();
+                    MySqlDataReader reader = command.ExecuteReader();
                     // a row grabbed from the query so that means a user with that exits so we set to true
                     if (reader.HasRows)
                     {
                         exists = true;
                     }
+
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
 
             return exists;
         }
+
+        public int FindUserIDByEmail(UserModel user)
+        {
+            // userID to 0
+            int userID = 0;
+            // select if user name or email matches
+            string sqlStatement = "SELECT * FROM Users WHERE email = @email";
+
+
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    MySqlCommand command = new MySqlCommand(sqlStatement, connection);
+
+
+                    command.Parameters.Add("@email", MySqlDbType.VarChar, 40).Value = user.email;
+
+                    
+                    
+                     connection.Open();
+                     MySqlDataReader reader = command.ExecuteReader();
+                     // a row grabbed from the query so that means a user with that exits so we set to true
+                     if (reader.HasRows)
+                     {
+                         reader.Read();
+                         userID = reader.GetInt32(reader.GetOrdinal("userID"));
+                     }
+                    
+                    
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return userID;
+        }
+
+        /// <summary>
+        /// Method for updating the user's profile not including the password
+        /// </summary>
+        /// <param name="user"></param>
+        public void UpdateProfile(UserModel user)
+        {
+            string sqlStatement = "UPDATE users SET name = @name, phoneNumber = @phoneNumber, address = @address, zipCode = @zipCode, state = @state, email = @email WHERE userID = @userID";
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    MySqlCommand command = new MySqlCommand(sqlStatement, connection);
+                    command.Parameters.AddWithValue("@userID", user.userID);
+                    command.Parameters.AddWithValue("@name", user.name);
+                    command.Parameters.AddWithValue("@phoneNumber", user.phoneNumber);
+                    command.Parameters.AddWithValue("@address", user.address);
+                    command.Parameters.AddWithValue("@zipCode", user.zipCode);
+                    command.Parameters.AddWithValue("@state", user.state);
+                    command.Parameters.AddWithValue("@email", user.email);
+
+
+                    
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                    
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+
+        public void UpdatePassword(UserModel user)
+        {
+            string sqlStatement = "UPDATE users SET password = @password WHERE userID = @userID";
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(connectionString))
+                {
+                    MySqlCommand command = new MySqlCommand(sqlStatement, connection);
+                    command.Parameters.AddWithValue("@userID", user.userID);
+
+                    // Hash the password before storing in the database
+                    string hashedPassword = HashPassword(user.password);
+                    command.Parameters.AddWithValue("@password", hashedPassword);
+
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+            } 
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+
+
         private string HashPassword(string password)
         {
             using (SHA256 sha256Hash = SHA256.Create())

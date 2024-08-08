@@ -1,0 +1,32 @@
+﻿@model OCDD.Models.UserModel
+
+@{
+    ViewData["Title"] = "My Appointments";
+}
+
+<h1>My Appointments</h1>
+
+<div class="container mt-5">
+    <h2>Scheduled Appointments</h2>
+    <div class="row">
+        @foreach (var appointment in Model.upcomingAppointments)
+        {
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">@appointment.service.name</h5>
+                        <p class="card-text">
+                            @appointment.dateTime.ToString("f")
+                        </p>
+                        <a href="@Url.Action("Index", "Appointment", new { appointmentID = appointment.appointmentID, source = "MyAppointments" })" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <h2>Completed/Cancelled Appointments</h2>
+    <div id="pastAppointments">
+        @Html.Partial("_PastAppointments", Model.pastAppointments)
+    </div>
+</div>

@@ -1,0 +1,54 @@
+﻿@model OCDD.Models.AdminDashboardModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h1>Admin Dashboard</h1>
+
+<!-- Services Section -->
+<div class="container mt-5">
+
+    <h2>Services</h2>
+    <p>
+        <a href="@Url.Action("Index", "Service")" class="btn btn-success">Add Service</a>
+    </p>
+    <div class="row">
+        @foreach (var service in Model.services)
+        {
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">@service.name</h5>
+                        <p class="card-text">
+                            @service.description
+                        </p>
+                        <p class="card-text">
+                            Price: @service.price
+                        </p>
+                        <p class="card-text">
+                            Duration: @service.duration
+                        </p>
+                        <a href="@Url.Action("EditService", "Service", new { serviceID = service.serviceID })" class="btn btn-primary">Edit</a>
+                        <a href="@Url.Action("DeleteService", "Service", new { serviceID = service.serviceID })" class="btn btn-danger" onclick="confirmDelete()">Delete</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Appointments Section -->
+<div class="container mt-5">
+    <h2>Appointments</h2>
+    <div id="appointments">
+        @Html.Partial("_AppointmentsPartial", Model.appointments)
+    </div>
+</div>
+<script>
+    // confirm complete
+    function confirmDelete() {
+        return confirm('Are you sure you want to DELETE this service?');
+    }
+
+</script>

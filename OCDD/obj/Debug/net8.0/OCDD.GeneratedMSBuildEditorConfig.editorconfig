@@ -26,6 +26,18 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = D:\School\GCU\CST-451 Projects\OCDD\OCDD
 build_property._RazorSourceGeneratorDebug = 
 
+[D:/School/GCU/CST-451 Projects/OCDD/OCDD/Views/AdminDashboard/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5EYXNoYm9hcmRcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/School/GCU/CST-451 Projects/OCDD/OCDD/Views/AdminDashboard/_AppointmentsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5EYXNoYm9hcmRcX0FwcG9pbnRtZW50c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/School/GCU/CST-451 Projects/OCDD/OCDD/Views/Appointment/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBwb2ludG1lbnRcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/School/GCU/CST-451 Projects/OCDD/OCDD/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -46,6 +58,18 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cTG9naW5TdWNjZXNzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/School/GCU/CST-451 Projects/OCDD/OCDD/Views/MyAppointments/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTXlBcHBvaW50bWVudHNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/School/GCU/CST-451 Projects/OCDD/OCDD/Views/MyAppointments/_PastAppointments.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTXlBcHBvaW50bWVudHNcX1Bhc3RBcHBvaW50bWVudHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/School/GCU/CST-451 Projects/OCDD/OCDD/Views/Profile/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/School/GCU/CST-451 Projects/OCDD/OCDD/Views/Register/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVnaXN0ZXJcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -56,6 +80,18 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/School/GCU/CST-451 Projects/OCDD/OCDD/Views/Register/RegisterSuccess.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVnaXN0ZXJcUmVnaXN0ZXJTdWNjZXNzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/School/GCU/CST-451 Projects/OCDD/OCDD/Views/ScheduleAppointment/AppointmentConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2NoZWR1bGVBcHBvaW50bWVudFxBcHBvaW50bWVudENvbmZpcm1hdGlvbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/School/GCU/CST-451 Projects/OCDD/OCDD/Views/ScheduleAppointment/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2NoZWR1bGVBcHBvaW50bWVudFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/School/GCU/CST-451 Projects/OCDD/OCDD/Views/Service/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VydmljZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/School/GCU/CST-451 Projects/OCDD/OCDD/Views/Shared/Error.cshtml]

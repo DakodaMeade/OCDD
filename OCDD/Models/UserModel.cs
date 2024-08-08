@@ -22,7 +22,7 @@ namespace OCDD.Models
         [Required]
         [DisplayName("Phone Number")]
         [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be exactly 10 digits.")]
-        public int phoneNumber { get; set; }
+        public string phoneNumber { get; set; }
 
         [Required]
         [DisplayName("Address")]
@@ -51,26 +51,17 @@ namespace OCDD.Models
         [Required]
         [DisplayName("Password")]
         [StringLength(20, MinimumLength = 6)]
+        [RegularExpression(@"^(?=.*[A-Z])(?=.*[\W.])[A-Za-z\d\W.]{6,20}$",
+        ErrorMessage = "Password must be 6-20 characters long, contain at least one uppercase letter, and include at least one special character.")]
+
         public string password { get; set; }
 
 		public string role { get; set; }
 
-		public List<ServiceModel> serviceHistory { get; set; }
+		public List<AppointmentModel> upcomingAppointments { get; set; }
+		public List<AppointmentModel> pastAppointments { get; set; }
 
 
-
-
-		public void ViewServiceHistory() 
-		{
-
-		}
-
-		/*
-		// to string method
-		public override string ToString()
-		{
-			return "Username = " + username + " Password = " + password;
-		}
-		*/
+	
 	}
 }

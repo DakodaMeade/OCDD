@@ -1,0 +1,295 @@
+﻿@model OCDD.Models.AppointmentModel
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+<h4>Schedule an Appointment</h4>
+
+<div class="row">
+    <!-- Navigation Tabs -->
+    <div class="col-md-3">
+        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            @if (HttpContextAccessor.HttpContext.Session.GetString("userID") == null)
+            {
+                <a class="nav-link active" id="non-registered-tab" data-bs-toggle="pill" href="#non-registered" role="tab" aria-controls="non-registered" aria-selected="true">Personal Info</a>
+            }
+            <a class="nav-link @(HttpContextAccessor.HttpContext.Session.GetString("userID") != null ? "active" : "")" id="vehicle-tab" data-bs-toggle="pill" href="#vehicle" role="tab" aria-controls="vehicle" aria-selected="@(HttpContextAccessor.HttpContext.Session.GetString("userID") != null ? "true" : "false")" style="@(HttpContextAccessor.HttpContext.Session.GetString("userID") != null ? "display:show" : "display:none")">Vehicle Detail</a>
+            <a class="nav-link" id="services-tab" data-bs-toggle="pill" href="#services" role="tab" aria-controls="services" aria-selected="false" style="display:none;">Available Services</a>
+            <a class="nav-link" id="calendar-tab" data-bs-toggle="pill" href="#calendar" role="tab" aria-controls="calendar" aria-selected="false" style="display:none;">Select Date & Time</a>
+        </div>
+    </div>
+
+    <!-- Main Content and Details Panel -->
+    <div class="col-md-9">
+        <div class="row">
+            <!-- Main Content -->
+            <div class="col-md-8">
+                <div class="tab-content" id="v-pills-tabContent">
+
+                    <!-- Non-Registered User Info Tab -->
+                    <div class="tab-pane fade @(HttpContextAccessor.HttpContext.Session.GetString("userID") == null ? "show active" : "")" id="non-registered" role="tabpanel" aria-labelledby="non-registered-tab">
+                        <form id="nonRegisteredForm">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" id="name" class="form-control" required />
+                                <div class="invalid-feedback">Name is required.</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="phoneNumber">Phone Number</label>
+                                <input type="text" id="phoneNumber" class="form-control" pattern="\d{10}" title="Phone number must be exactly 10 digits." required />
+                                <div class="invalid-feedback">Phone number must be exactly 10 digits.</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <input type="text" id="address" class="form-control" required />
+                                <div class="invalid-feedback">Address is required.</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="zipCode">Zip Code</label>
+                                <input type="text" id="zipCode" class="form-control" pattern="\d{5}" title="Zip code must be exactly 5 digits." required />
+                                <div class="invalid-feedback">Zip code must be exactly 5 digits.</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" id="city" class="form-control" required />
+                                <div class="invalid-feedback">City is required.</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="state">State</label>
+                                <input type="text" id="state" class="form-control" pattern="[A-Za-z]{2}" title="State must be 2 letters." required />
+                                <div class="invalid-feedback">State must be 2 letters.</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" class="form-control" required />
+                                <div class="invalid-feedback">Invalid Email.</div>
+                            </div>
+                            <button type="button" class="btn btn-primary mt-3" id="selectNonRegisteredDetails">Next</button>
+                        </form>
+                    </div>
+
+                    <!-- Vehicle Details Tab -->
+                    <div class="tab-pane fade @(HttpContextAccessor.HttpContext.Session.GetString("userID") != null ? "show active" : "")" id="vehicle" role="tabpanel" aria-labelledby="vehicle-tab">
+                        <form id="vehicleForm">
+                            <div class="form-group">
+                                <label for="vehicleYear">Vehicle Year</label>
+                                <select class="form-select" id="vehicleYear" required>
+                                    <option value="">Select Year</option>
+                                    @for (int year = DateTime.Now.Year; year >= 1910; year--)
+                                    {
+                                        <option value="@year">@year</option>
+                                    }
+                                </select>
+                                <div class="invalid-feedback">Vehicle Year is required.</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="vehicleMake">Vehicle Make</label>
+                                <input type="text" id="vehicleMake" class="form-control" required />
+                                <div class="invalid-feedback">Vehicle Make is required.</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="vehicleModel">Vehicle Model</label>
+                                <input type="text" id="vehicleModel" class="form-control" required />
+                                <div class="invalid-feedback">Vehicle Model is required.</div>
+                            </div>
+                            <button type="button" class="btn btn-primary mt-3" id="selectVehicleDetails">Next</button>
+                        </form>
+                    </div>
+
+                    <!-- Available Services Tab -->
+                    <div class="tab-pane fade" id="services" role="tabpanel" aria-labelledby="services-tab">
+                        <div class="row">
+                            @foreach (var service in (List<OCDD.Models.ServiceModel>)ViewBag.Services)
+                            {
+                                <div class="col-md-4 mb-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">@service.name</h5>
+                                            <p class="card-text">Description: @service.description</p>
+                                            <p class="card-text">Duration: @service.duration</p>
+                                            <p class="card-text">Price: $@service.price</p>
+                                            <button class="btn btn-primary select-service" data-service-id="@service.serviceID" data-service-name="@service.name" data-service-description="@service.description" data-service-duration="@service.duration" data-service-price="@service.price">Select Service</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Calendar and Time Slots Tab -->
+                    <div class="tab-pane fade" id="calendar" role="tabpanel" aria-labelledby="calendar-tab">
+                        <form method="post" asp-action="Schedule">
+                            <div class="form-group">
+                                <label for="datepicker">Select Date:</label>
+                                <input type="text" id="datepicker" name="date" class="form-control mb-3" required />
+                                <div class="invalid-feedback">Date is required.</div>
+                            </div>
+                            <div id="timeSlots" style="display:none;">
+                                <label>Select Time:</label>
+                                <div id="timeSlotsContainer">
+                                    @for (int hour = 8; hour < 17; hour++)
+                                    {
+                                        <button type="button" class="btn btn-secondary time-slot" data-time="@hour:00">@((hour % 12 == 0 ? 12 : hour % 12).ToString("D2")):00 @(hour >= 12 ? "PM" : "AM")</button>
+                                    }
+                                </div>
+                                <input type="hidden" id="selectedTime" name="time" required />
+                                <div class="invalid-feedback">Time is required.</div>
+                            </div>
+                            <input type="hidden" id="vehicleYearHidden" name="vehicleYear" />
+                            <input type="hidden" id="vehicleMakeHidden" name="vehicleMake" />
+                            <input type="hidden" id="vehicleModelHidden" name="vehicleModel" />
+                            <input type="hidden" id="serviceIDHidden" name="service.serviceID" />
+                            <input type="hidden" id="personalNameHidden" name="name" />
+                            <input type="hidden" id="personalPhoneNumberHidden" name="phoneNumber" />
+                            <input type="hidden" id="personalAddressHidden" name="address" />
+                            <input type="hidden" id="personalZipCodeHidden" name="zipCode" />
+                            <input type="hidden" id="personalCityHidden" name="city" />
+                            <input type="hidden" id="personalStateHidden" name="state" />
+                            <input type="hidden" id="personalEmailHidden" name="email" />
+                            <button type="submit" class="btn btn-success mt-3">Schedule Appointment</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details Panel -->
+            <div class="col-md-4">
+                <div id="appointment-details" class="border p-3">
+                    <h5>Appointment Details</h5>
+                    <div id="vehicle-info" style="display:show;">
+                        <h6>Vehicle Information</h6>
+                        <p id="selected-vehicleYear">Year: Not Selected</p>
+                        <p id="selected-vehicleMake">Make: Not Selected</p>
+                        <p id="selected-vehicleModel">Model: Not Selected</p>
+                    </div>
+                    <!-- Service Info -->
+                    <div id="service-info" style="display:show;">
+                        <h6>Service Information</h6>
+                        <p id="selected-service-name">Service: Not Selected</p>
+                        <p id="selected-service-description"></p>
+                        <p id="selected-service-duration"></p>
+                        <p id="selected-service-price"></p>
+                    </div>
+                    <!-- Date & Time Info -->
+                    <div id="date-time-info" style="display:show;">
+                        <h6>Date & Time Information</h6>
+                        <p id="selected-date">Date: Not Selected</p>
+                        <p id="selected-time">Time: Not Selected</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+
+    <!-- Flatpickr JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script>
+        document.getElementById('selectNonRegisteredDetails').addEventListener('click', function () {
+            const form = document.getElementById('nonRegisteredForm');
+            if (form.checkValidity()) {
+                    // Capture personal info
+        const name = document.getElementById('name').value;
+        const phoneNumber = document.getElementById('phoneNumber').value;
+        const address = document.getElementById('address').value;
+        const zipCode = document.getElementById('zipCode').value;
+        const city = document.getElementById('city').value;
+        const state = document.getElementById('state').value;
+        const email = document.getElementById('email').value;
+
+        // Set hidden fields
+        document.getElementById('personalNameHidden').value = name;
+        document.getElementById('personalPhoneNumberHidden').value = phoneNumber;
+        document.getElementById('personalAddressHidden').value = address;
+        document.getElementById('personalZipCodeHidden').value = zipCode;
+        document.getElementById('personalCityHidden').value = city;
+        document.getElementById('personalStateHidden').value = state;
+        document.getElementById('personalEmailHidden').value = email;
+            // Show the vehicle tab
+            document.getElementById("vehicle-tab").style.display = 'block';
+            const vehicleTabLink = document.querySelector('[href="#vehicle"]');
+            const tab = new bootstrap.Tab(vehicleTabLink);
+            tab.show();
+
+            } else {
+                form.reportValidity();
+            }
+        });
+        // When vehicle details are submitted
+        document.getElementById('selectVehicleDetails').addEventListener('click', function () {
+            // Validate and capture vehicle details
+            const vehicleYear = document.getElementById('vehicleYear').value;
+            const vehicleMake = document.getElementById('vehicleMake').value;
+            const vehicleModel = document.getElementById('vehicleModel').value;
+
+            if (vehicleYear && vehicleMake && vehicleModel) {
+                // Update details panel
+                document.getElementById('vehicle-info').style.display = 'block';
+                document.getElementById('selected-vehicleYear').textContent = `Year: ${vehicleYear}`;
+                document.getElementById('selected-vehicleMake').textContent = `Make: ${vehicleMake}`;
+                document.getElementById('selected-vehicleModel').textContent = `Model: ${vehicleModel}`;
+
+                // Set hidden input values
+                document.getElementById('vehicleYearHidden').value = vehicleYear;
+                document.getElementById('vehicleMakeHidden').value = vehicleMake;
+                document.getElementById('vehicleModelHidden').value = vehicleModel;
+
+                // Show next tab
+                document.getElementById("services-tab").style.display = 'block';
+                document.getElementById('services-tab').click();
+            } else {
+                // Handle validation error
+            }
+        });
+
+   document.querySelectorAll(".select-service").forEach(function(button) {
+    button.addEventListener('click', function() {
+        var serviceID = button.getAttribute("data-service-id");
+        var serviceName = button.getAttribute("data-service-name");
+        var serviceDescription = button.getAttribute("data-service-description");
+        var serviceDuration = button.getAttribute("data-service-duration");
+        var servicePrice = button.getAttribute("data-service-price");
+
+        document.getElementById("selected-service-name").textContent = "Service: " + serviceName;
+        document.getElementById("selected-service-description").textContent = "Description: " + serviceDescription;
+        document.getElementById("selected-service-duration").textContent = "Duration: " + serviceDuration;
+        document.getElementById("selected-service-price").textContent = "Price: $" + servicePrice;
+        document.getElementById("serviceIDHidden").value = serviceID;
+
+        document.getElementById("calendar-tab").style.display = 'block';
+        
+        // Use Bootstrap's tab method to show the calendar tab
+        var calendarTabLink = document.querySelector("#v-pills-tab a[href='#calendar']");
+        var tab = new bootstrap.Tab(calendarTabLink);
+        tab.show();
+    });
+});
+        // When a date is selected
+        document.getElementById('datepicker').addEventListener('change', function () {
+            const date = this.value;
+            document.getElementById('selected-date').textContent = `Date: ${date}`;
+            document.getElementById('date-time-info').style.display = 'block';
+            // Show time slots
+            document.getElementById('timeSlots').style.display = 'block';
+        });
+    document.querySelectorAll('.time-slot').forEach(button => {
+        button.addEventListener('click', function () {
+            const time = this.getAttribute('data-time');
+            document.getElementById('selected-time').innerText = `Time: ${this.innerText}`;
+            document.getElementById('selectedTime').value = time;
+        });
+    });
+
+    // Initialize Datepicker
+    flatpickr("#datepicker", {
+        dateFormat: "Y-m-d",
+        minDate: "today",
+        onChange: function(selectedDates, dateStr, instance) {
+            document.getElementById('calendar-tab').style.display = "block";
+            document.getElementById('timeSlots').style.display = "block";
+        }
+    });
+</script>
+}

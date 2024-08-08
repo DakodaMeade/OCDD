@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 using Microsoft.AspNetCore.Identity;
+using OCDD.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -9,7 +10,20 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 // session setup
 builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession();
+//builder.Services.AddSession();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+// Register IHttpContextAccessor
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+// Register your SecurityService
+builder.Services.AddScoped<SecurityService>();
 
 var app = builder.Build();
 
@@ -28,6 +42,7 @@ app.UseRouting();
 // Session
 app.UseSession();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
