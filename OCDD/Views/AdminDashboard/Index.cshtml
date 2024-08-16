@@ -1,0 +1,155 @@
+﻿@model OCDD.Models.AdminDashboardModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h1>Admin Dashboard</h1>
+
+<!-- Services Section -->
+<div class="container mt-5">
+
+    <h2>Services</h2>
+    <p>
+        <a href="@Url.Action("Index", "Service")" class="btn btn-success">Add Service</a>
+    </p>
+    <div class="row">
+        @foreach (var service in Model.services)
+        {
+            <div class="col-md-4">
+                <div class="card text-primary-emphasis bg-light mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">@service.name</h5>
+                        <p class="card-text">
+                            @service.description
+                        </p>
+                        <p class="card-text">
+                            Price: @service.price
+                        </p>
+                        <p class="card-text">
+                            Duration: @service.duration
+                        </p>
+                        <a href="@Url.Action("EditService", "Service", new { serviceID = service.serviceID })" class="btn btn-info">Edit</a>
+                        <a href="@Url.Action("DeleteService", "Service", new { serviceID = service.serviceID })" class="btn btn-danger" onclick="return confirmDelete()">Delete</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Appointments Section -->
+<div class="container mt-5">
+    <h2>Appointments</h2>
+    <!-- Filter Form -->
+    <form id="filterForm" method="post" action="@Url.Action("Filter", "AppointmentsFilter")">
+        <input type="hidden" name="source" value="AdminDashboard">
+        <div class="row">
+            <div class="col-md-4">
+                <label for="dateRange">Date Range:</label>
+                <div class="input-group">
+                    <input type="text" id="startDate" name="startDate" class="form-control flatpickr" placeholder="Start Date">
+                    <input type="text" id="endDate" name="endDate" class="form-control flatpickr" placeholder="End Date">
+                </div>
+            </div>
+            <div class="col-md-5">
+                <label>Status:</label>
+                <div class="d-flex align-items-center">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="all" name="status" value="All" checked>
+                        <label class="form-check-label" for="all">All</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="scheduled" name="status" value="Scheduled">
+                        <label class="form-check-label" for="scheduled">Scheduled</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="completed" name="status" value="Completed">
+                        <label class="form-check-label" for="completed">Completed</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="cancelled" name="status" value="Cancelled">
+                        <label class="form-check-label" for="cancelled">Cancelled</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label for="appointmentID">Appointment ID:</label>
+                <div class="input-group">
+                    <input type="text" id="appointmentID" name="appointmentID" class="form-control">
+                    <button type="submit" class="btn btn-info ms-2">Filter</button>
+                    <button type="button" class="btn btn-danger ms-2" id="resetButton">Reset</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div id="appointments">
+        @Html.Partial("_AppointmentsPartial", Model.appointments)
+    </div>
+</div>
+
+@section Scripts {
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        const startDatePicker = flatpickr('#startDate', {
+            dateFormat: "Y-m-d",
+            onChange: function (selectedDates, dateStr) {
+                if (selectedDates.length > 0) {
+                    const endDatePicker = flatpickr('#endDate');
+                    endDatePicker.set('minDate', dateStr); // Set minDate for end date
+                }
+            }
+        });
+
+        const endDatePicker = flatpickr('#endDate', {
+            dateFormat: "Y-m-d",
+            onChange: function (selectedDates, dateStr) {
+                if (selectedDates.length > 0) {
+                    startDatePicker.set('maxDate', dateStr); // Set maxDate for start date
+
+                }
+            }
+        });
+        document.getElementById('resetButton').addEventListener('click', function () {
+            // Clear text inputs
+            document.getElementById('appointmentID').value = '';
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+
+            // Reset Flatpickr instances
+            const startDatePicker = flatpickr('#startDate');
+            const endDatePicker = flatpickr('#endDate');
+            startDatePicker.clear();
+            endDatePicker.clear();
+
+            // Reset radio buttons to default
+            document.getElementById('all').checked = true;
+
+            // Submit the form to trigger the controller action
+            //document.getElementById('filterForm').submit();
+        });
+        //
+
+        $('#filterForm').on('submit', function (e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                success: function (response) {
+                    $('#appointments').html(response); // Update the correct ID
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+        // confirm complete
+        function confirmDelete() {
+            return confirm('Are you sure you want to DELETE this service?');
+        }
+
+    </script>
+}

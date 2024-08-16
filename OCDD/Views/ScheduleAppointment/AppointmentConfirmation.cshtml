@@ -1,0 +1,152 @@
+﻿@model AppointmentModel
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+<div class="container mt-5">
+    <div class="card mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-primary text-white text-center">
+            <h4>Appointment Confirmation</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.appointmentID)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.appointmentID)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.dateTime)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.dateTime)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.vehicleYear)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.vehicleYear)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.vehicleMake)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.vehicleMake)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.vehicleModel)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.vehicleModel)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.status)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.status)
+                </dd>
+            </dl>
+            <hr />
+            <h5>Service Information</h5>
+            <dl class="row">
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.service.name)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.service.name)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.service.description)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.service.description)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.service.price)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.service.price)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.service.duration)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.service.duration)
+                </dd>
+            </dl>
+            <hr />
+            <h5>Personal Information</h5>
+            <dl class="row">
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.name)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.name)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.email)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.email)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.phoneNumber)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.phoneNumber)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.address)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.address)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.zipCode)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.zipCode)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.city)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.city)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.state)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.state)
+                </dd>
+            </dl>
+            <div class="text-center mt-4">
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary">OK</a>
+            </div>
+        </div>
+    </div>
+    <style>
+        .link {
+            color: #007bff; /* Bootstrap's primary link color */
+            text-decoration: none; /* Remove underline */
+        }
+
+            .link:hover {
+                text-decoration: underline; /* Underline on hover */
+            }
+    </style>
+    @if (HttpContextAccessor.HttpContext.Session.GetString("userID") == null)
+    {
+        <div class="text-center">
+            <a href="@Url.Action("RegisterFromAppointment", "Register", new {
+            name = Model.name,
+            email = Model.email,
+            phoneNumber = Model.phoneNumber,
+            address = Model.address,
+            zipCode = Model.zipCode,
+            city = Model.city,
+            state = Model.state
+        })" class="link">Click here</a> to register an account to speed up the scheduling process for next time.
+        </div>
+    }
+</div>

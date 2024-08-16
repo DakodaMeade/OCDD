@@ -1,0 +1,149 @@
+﻿@model OCDD.Models.UserModel
+
+<h4>Profile</h4>
+<hr />
+
+<!-- Profile Form -->
+<form id="profileForm" asp-action="UpdateProfile" method="post">
+    <input type="hidden" id="profileUserID" name="userID" value="@Model.userID" />
+    <div class="form-group">
+        <label asp-for="name" class="control-label"></label>
+        <input asp-for="name" class="form-control" readonly />
+        <span asp-validation-for="name" class="text-danger profile-validation" style="display:none;"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="phoneNumber" class="control-label"></label>
+        <input asp-for="phoneNumber" class="form-control" readonly />
+        <span asp-validation-for="phoneNumber" class="text-danger profile-validation" style="display:none;"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="address" class="control-label"></label>
+        <input asp-for="address" class="form-control" readonly />
+        <span asp-validation-for="address" class="text-danger profile-validation" style="display:none;"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="zipCode" class="control-label"></label>
+        <input asp-for="zipCode" class="form-control" readonly />
+        <span asp-validation-for="zipCode" class="text-danger profile-validation" style="display:none;"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="city" class="control-label"></label>
+        <input asp-for="city" class="form-control" readonly />
+        <span asp-validation-for="city" class="text-danger profile-validation" style="display:none;"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="state" class="control-label"></label>
+        <input asp-for="state" class="form-control" readonly />
+        <span asp-validation-for="state" class="text-danger profile-validation" style="display:none;"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="email" class="control-label"></label>
+        <input asp-for="email" class="form-control" readonly />
+        <span asp-validation-for="email" class="text-danger profile-validation" style="display:none;"></span>
+    </div>
+    <div>
+        <button type="button" id="editProfileBtn" class="btn btn-info mt-3" onclick="enableEdit('profileForm', 'profileButtons', 'profile-validation')">Edit</button>
+        <div id="profileButtons" style="display:none;">
+            <button type="submit" class="btn btn-success mt-3">Save</button>
+            <button type="button" class="btn btn-danger mt-3" onclick="cancelEdit('profileForm', 'profileButtons', 'profile-validation')">Cancel</button>
+        </div>
+    </div>
+</form>
+
+<hr />
+
+<!-- Password Form -->
+<form id="passwordForm" asp-action="UpdatePassword" method="post">
+    <input type="hidden" id="passwordUserID" name="userID" value="@Model.userID" />
+    <div class="form-group">
+        <label asp-for="password" class="control-label"></label>
+        <input asp-for="password" type="password" class="form-control" readonly />
+        <span asp-validation-for="password" class="text-danger password-validation" style="display:none;"></span>
+    </div>
+    <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" class="form-control" readonly />
+        <span class="text-danger" id="confirmPasswordError" style="display:none;"></span>
+    </div>
+    <div>
+        <button type="button" id="editPasswordBtn" class="btn btn-info mt-3" onclick="enableEdit('passwordForm', 'passwordButtons', 'password-validation')">Change Password</button>
+        <div id="passwordButtons" style="display:none;">
+            <button type="submit" class="btn btn-success mt-3">Save</button>
+            <button type="button" class="btn btn-danger mt-3" onclick="cancelEdit('passwordForm', 'passwordButtons', 'password-validation')">Cancel</button>
+        </div>
+    </div>
+</form>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+        <script>
+            function enableEdit(formId, buttonsId, validationClass) {
+                var form = document.getElementById(formId);
+                var buttons = document.getElementById(buttonsId);
+                var inputs = form.getElementsByTagName('input');
+
+                // Hide all edit buttons
+                document.getElementById('editProfileBtn').style.display = 'none';
+                document.getElementById('editPasswordBtn').style.display = 'none';
+
+                // Enable form fields
+                for (var i = 0; i < inputs.length; i++) {
+                    if (inputs[i].getAttribute('readonly') !== null) {
+                        inputs[i].removeAttribute('readonly');
+                    }
+                }
+
+                // Show the save and cancel buttons
+                buttons.style.display = 'block';
+
+                // Clear and show validation messages for the active form
+                document.querySelectorAll('.' + validationClass).forEach(function (element) {
+                    element.style.display = 'block';
+                });
+            }
+
+            function cancelEdit(formId, buttonsId, validationClass) {
+                var form = document.getElementById(formId);
+                var buttons = document.getElementById(buttonsId);
+                var inputs = form.getElementsByTagName('input');
+
+                // Show all edit buttons
+                document.getElementById('editProfileBtn').style.display = 'block';
+                document.getElementById('editPasswordBtn').style.display = 'block';
+
+                // Disable form fields
+                for (var i = 0; i < inputs.length; i++) {
+                    if (!inputs[i].hasAttribute('readonly')) {
+                        inputs[i].setAttribute('readonly', 'readonly');
+                    }
+                }
+
+                // Hide the save and cancel buttons
+                buttons.style.display = 'none';
+
+                // Hide validation messages for the active form
+                document.querySelectorAll('.' + validationClass).forEach(function (element) {
+                    element.style.display = 'none';
+                });
+            }
+
+            // Form submit validation
+            document.getElementById('passwordForm').addEventListener('submit', function (event) {
+                var form = event.target;
+                var password = form.querySelector('input[name="password"]').value;
+                var confirmPassword = form.querySelector('#confirmPassword').value;
+                var confirmPasswordError = form.querySelector('#confirmPasswordError');
+
+                if (password !== confirmPassword) {
+                    event.preventDefault();
+                    confirmPasswordError.textContent = 'Passwords do not match.';
+                    confirmPasswordError.style.display = 'block'; // Show error message
+                } else {
+                    confirmPasswordError.textContent = ''; // Clear error message
+                    confirmPasswordError.style.display = 'none';
+                }
+            });
+        </script>
+}
