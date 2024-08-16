@@ -245,7 +245,7 @@ namespace OCDD.Services
         /// <param name="user"></param>
         public void UpdateProfile(UserModel user)
         {
-            string sqlStatement = "UPDATE users SET name = @name, phoneNumber = @phoneNumber, address = @address, zipCode = @zipCode, state = @state, email = @email WHERE userID = @userID";
+            string sqlStatement = "UPDATE users SET name = @name, phoneNumber = @phoneNumber, city = @city, address = @address, zipCode = @zipCode, state = @state, email = @email WHERE userID = @userID";
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
@@ -256,6 +256,7 @@ namespace OCDD.Services
                     command.Parameters.AddWithValue("@phoneNumber", user.phoneNumber);
                     command.Parameters.AddWithValue("@address", user.address);
                     command.Parameters.AddWithValue("@zipCode", user.zipCode);
+                    command.Parameters.AddWithValue("@city", user.city);
                     command.Parameters.AddWithValue("@state", user.state);
                     command.Parameters.AddWithValue("@email", user.email);
 

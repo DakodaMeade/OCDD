@@ -1,62 +1,54 @@
+/* Base Font Size */
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+/* Focus and Active States */
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
+/* Ensure Full Height for Body */
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    /*margin-bottom: 60px;*/ /* Space for the fixed footer */
+    /*background-color: silver;*/
+    display: flex;
+    flex-direction: column;
 }
 
+/* Fixed Footer */
 .fixed-footer {
-    position: fixed;
+    /*position: fixed;*/
     bottom: 0;
     width: 100%;
-    background-color: white; /* Ensure the background color matches your site's design */
+    margin-top: auto;
     z-index: 1000; /* Ensure it stays above other elements */
 }
 
+/* Tabs Styling */
 .nav-tabs {
-    border-bottom: 1px solid #dee2e6;
-}
-
-    .nav-tabs .nav-link {
-        border: 1px solid transparent;
-        border-radius: 0;
-        margin-right: -1px;
-    }
-
-        .nav-tabs .nav-link.active {
-            color: #495057;
-            background-color: #fff;
-            border-color: #dee2e6 #dee2e6 #fff;
-        }
-
-        .nav-tabs .nav-link:hover {
-            border-color: #dee2e6 #dee2e6 #fff;
-        }
-
-/* Calendar Container Styling */
-/* Tabs */
-.nav-tabs {
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #ddd; /* Unified border color */
+    display: flex;
+    flex-direction: column; /* Align tabs to the left */
 }
 
     .nav-tabs .nav-item {
-        margin-bottom: -1px;
+        margin-bottom: 0; /* Remove margin bottom from tab items */
     }
 
     .nav-tabs .nav-link {
@@ -91,13 +83,40 @@ body {
     margin-bottom: 5px;
 }
 
-/* Align tabs to the left */
-.nav-tabs {
-    display: flex;
-    flex-direction: column;
+.hero-content {
+    /*color: black;*/
+    text-align: center;
+    padding: 100px 0;
 }
 
-    .nav-tabs .nav-item {
-        margin-bottom: 0;
+    .hero-content img {
+        display: block;
+        margin: 20px auto; /* Adjust the margin as needed */
+        max-width: 100%;
+        /* height: auto; */
+        height: 400px;
     }
 
+    .hero-content h1 {
+        font-size: 3rem;
+        margin-bottom: 20px;
+    }
+
+    .hero-content .btn-primary {
+        /*background-color: #007bff;*/
+        border: none;
+    }
+
+        .hero-content .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+.container.mt-5 {
+    margin-top: 5rem;
+}
+
+/* Ensure full height for the body and html */
+html, body {
+    height: 100%;
+    margin: 0;
+}

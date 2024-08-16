@@ -5,11 +5,14 @@ using System.Collections.Generic;
 
 namespace OCDD.Controllers
 {
+    [CustomAuthorization]
     public class MyAppointmentsController : Controller
     {
 
         SecurityService securityService = new SecurityService();
         AppointmentService appointmentService = new AppointmentService();
+
+        
         public IActionResult Index()
         {
             // gets the user that is logged in 
@@ -27,6 +30,7 @@ namespace OCDD.Controllers
             // Separate into upcoming and past appointments using LINQ
             var upcomingAppointments = allAppointments
                 .Where(a => a.status == "Scheduled") // Assuming "Scheduled" is the status for upcoming appointments
+                .OrderBy(a => a.dateTime)
                 .ToList();
 
             var pastAppointments = allAppointments

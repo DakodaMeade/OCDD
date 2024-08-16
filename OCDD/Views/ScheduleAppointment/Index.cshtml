@@ -62,7 +62,7 @@
                                 <input type="email" id="email" class="form-control" required />
                                 <div class="invalid-feedback">Invalid Email.</div>
                             </div>
-                            <button type="button" class="btn btn-primary mt-3" id="selectNonRegisteredDetails">Next</button>
+                            <button type="button" class="btn btn-info mt-3" id="selectNonRegisteredDetails">Next</button>
                         </form>
                     </div>
 
@@ -90,7 +90,7 @@
                                 <input type="text" id="vehicleModel" class="form-control" required />
                                 <div class="invalid-feedback">Vehicle Model is required.</div>
                             </div>
-                            <button type="button" class="btn btn-primary mt-3" id="selectVehicleDetails">Next</button>
+                            <button type="button" class="btn btn-info mt-3" id="selectVehicleDetails">Next</button>
                         </form>
                     </div>
 
@@ -100,13 +100,13 @@
                             @foreach (var service in (List<OCDD.Models.ServiceModel>)ViewBag.Services)
                             {
                                 <div class="col-md-4 mb-3">
-                                    <div class="card">
+                                    <div class="card bg-body-tertiary text-primary-emphasis">
                                         <div class="card-body">
                                             <h5 class="card-title">@service.name</h5>
                                             <p class="card-text">Description: @service.description</p>
                                             <p class="card-text">Duration: @service.duration</p>
                                             <p class="card-text">Price: $@service.price</p>
-                                            <button class="btn btn-primary select-service" data-service-id="@service.serviceID" data-service-name="@service.name" data-service-description="@service.description" data-service-duration="@service.duration" data-service-price="@service.price">Select Service</button>
+                                            <button class="btn btn-info select-service" data-service-id="@service.serviceID" data-service-name="@service.name" data-service-description="@service.description" data-service-duration="@service.duration" data-service-price="@service.price">Select Service</button>
                                         </div>
                                     </div>
                                 </div>
@@ -125,10 +125,10 @@
                             <div id="timeSlots" style="display:none;">
                                 <label>Select Time:</label>
                                 <div id="timeSlotsContainer">
-                                    @for (int hour = 8; hour < 17; hour++)
+                                    @* @for (int hour = 8; hour < 17; hour++)
                                     {
                                         <button type="button" class="btn btn-secondary time-slot" data-time="@hour:00">@((hour % 12 == 0 ? 12 : hour % 12).ToString("D2")):00 @(hour >= 12 ? "PM" : "AM")</button>
-                                    }
+                                    } *@
                                 </div>
                                 <input type="hidden" id="selectedTime" name="time" required />
                                 <div class="invalid-feedback">Time is required.</div>
@@ -151,7 +151,7 @@
             </div>
 
             <!-- Details Panel -->
-            <div class="col-md-4">
+            <div class="col-md-4 text-primary-emphasis bg-body-tertiary">
                 <div id="appointment-details" class="border p-3">
                     <h5>Appointment Details</h5>
                     <div id="vehicle-info" style="display:show;">
@@ -243,20 +243,24 @@
                 // Handle validation error
             }
         });
-
+    // update when service is selected
    document.querySelectorAll(".select-service").forEach(function(button) {
     button.addEventListener('click', function() {
+        // save service details tovariables
         var serviceID = button.getAttribute("data-service-id");
         var serviceName = button.getAttribute("data-service-name");
         var serviceDescription = button.getAttribute("data-service-description");
         var serviceDuration = button.getAttribute("data-service-duration");
         var servicePrice = button.getAttribute("data-service-price");
-
+        // update the service details
         document.getElementById("selected-service-name").textContent = "Service: " + serviceName;
         document.getElementById("selected-service-description").textContent = "Description: " + serviceDescription;
         document.getElementById("selected-service-duration").textContent = "Duration: " + serviceDuration;
         document.getElementById("selected-service-price").textContent = "Price: $" + servicePrice;
         document.getElementById("serviceIDHidden").value = serviceID;
+
+                const dateStr = document.getElementById('datepicker').value;
+                updateAvailableTimeSlots(dateStr);
 
         document.getElementById("calendar-tab").style.display = 'block';
         
@@ -274,22 +278,67 @@
             // Show time slots
             document.getElementById('timeSlots').style.display = 'block';
         });
-    document.querySelectorAll('.time-slot').forEach(button => {
-        button.addEventListener('click', function () {
-            const time = this.getAttribute('data-time');
-            document.getElementById('selected-time').innerText = `Time: ${this.innerText}`;
-            document.getElementById('selectedTime').value = time;
+        // calendar to pick the date
+        flatpickr("#datepicker", {
+            dateFormat: "Y-m-d",
+            minDate: "today",
+            onChange: function (selectedDates, dateStr, instance) {
+                updateAvailableTimeSlots(dateStr);
+                
+            }
         });
-    });
 
-    // Initialize Datepicker
-    flatpickr("#datepicker", {
-        dateFormat: "Y-m-d",
-        minDate: "today",
-        onChange: function(selectedDates, dateStr, instance) {
-            document.getElementById('calendar-tab').style.display = "block";
-            document.getElementById('timeSlots').style.display = "block";
+        // Update the time slots 
+        function updateAvailableTimeSlots(dateStr) {
+            if (dateStr) {
+                document.getElementById('calendar-tab').style.display = 'block';
+                document.getElementById('selected-date').textContent = `Date: ${dateStr}`;
+                // save the service duraction as a string in the correct format to be parsed
+                const serviceDuration = document.getElementById('selected-service-duration').textContent.replace('Duration: ', '') || '00:00:00';
+                // api call for 
+                fetch(`/ScheduleAppointment/GetAvailableTimeSlots?date=${dateStr}&serviceDuration=${encodeURIComponent(serviceDuration)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const timeSlotsContainer = document.getElementById('timeSlotsContainer');
+                        timeSlotsContainer.innerHTML = '';
+                        // if the there are any available time slots
+                        if (data.length > 0) {
+                            // Create buttons for the time slots
+                            data.forEach(slot => {
+                                const formattedTime = formatTime(slot);
+                                const button = document.createElement('button');
+                                button.type = 'button';
+                                button.className = 'btn btn-info time-slot';
+                                button.setAttribute('data-time', slot);
+                                button.textContent = formattedTime;
+                                timeSlotsContainer.appendChild(button);
+                            });
+                            // Add selection functionailty to the time slot buttons
+                            document.querySelectorAll('.time-slot').forEach(button => {
+                                button.addEventListener('click', function () {
+                                    const time = this.getAttribute('data-time');
+                                    document.getElementById('selected-time').innerText = `Time: ${this.innerText}`;
+                                    document.getElementById('selectedTime').value = time;
+                                });
+                            });
+
+                            document.getElementById('timeSlots').style.display = 'block';
+                        } else {
+                            timeSlotsContainer.innerHTML = '<p>No available time slots for the selected date.</p>';
+                            document.getElementById('timeSlots').style.display = 'block';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching time slots:', error);
+                    });
+            }
         }
-    });
+        // Formats time to use am and pm
+        function formatTime(time) {
+            const [hour, minute] = time.split(':').map(Number);
+            const period = hour >= 12 ? 'PM' : 'AM';
+            const formattedHour = ((hour + 11) % 12 + 1).toString().padStart(2, '0');
+            return `${formattedHour}:${minute.toString().padStart(2, '0')} ${period}`;
+        }
 </script>
 }

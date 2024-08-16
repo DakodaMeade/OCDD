@@ -42,7 +42,7 @@
         <span asp-validation-for="email" class="text-danger profile-validation" style="display:none;"></span>
     </div>
     <div>
-        <button type="button" id="editProfileBtn" class="btn btn-primary mt-3" onclick="enableEdit('profileForm', 'profileButtons', 'profile-validation')">Edit</button>
+        <button type="button" id="editProfileBtn" class="btn btn-info mt-3" onclick="enableEdit('profileForm', 'profileButtons', 'profile-validation')">Edit</button>
         <div id="profileButtons" style="display:none;">
             <button type="submit" class="btn btn-success mt-3">Save</button>
             <button type="button" class="btn btn-danger mt-3" onclick="cancelEdit('profileForm', 'profileButtons', 'profile-validation')">Cancel</button>
@@ -66,7 +66,7 @@
         <span class="text-danger" id="confirmPasswordError" style="display:none;"></span>
     </div>
     <div>
-        <button type="button" id="editPasswordBtn" class="btn btn-primary mt-3" onclick="enableEdit('passwordForm', 'passwordButtons', 'password-validation')">Change Password</button>
+        <button type="button" id="editPasswordBtn" class="btn btn-info mt-3" onclick="enableEdit('passwordForm', 'passwordButtons', 'password-validation')">Change Password</button>
         <div id="passwordButtons" style="display:none;">
             <button type="submit" class="btn btn-success mt-3">Save</button>
             <button type="button" class="btn btn-danger mt-3" onclick="cancelEdit('passwordForm', 'passwordButtons', 'password-validation')">Cancel</button>

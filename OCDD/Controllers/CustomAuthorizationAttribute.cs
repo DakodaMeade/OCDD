@@ -14,9 +14,9 @@ namespace OCDD.Controllers
 	{
 		public void OnAuthorization(AuthorizationFilterContext context)
 		{
-			string username = context.HttpContext.Session.GetString("username");
+			string userID = context.HttpContext.Session.GetString("userID");
 
-			if (username == null)
+			if (userID == null)
 			{
 				context.Result = new RedirectResult("/login");
 			}

@@ -138,7 +138,7 @@
                         </div>
                     }
                 <div class="col text-right">
-                        <form id="cancelForm" action="@Url.Action("CancelAppointment", "Appointment", new { appointmentID = Model.appointmentID })" method="post">
+                        <form id="cancelForm" action="@Url.Action("CancelAppointment", "Appointment", new { appointmentID = Model.appointmentID, source = ViewData["Source"] })" method="post">
                             <button type="submit" class="btn btn-danger" onclick="return confirmCancel()">Cancel Appointment</button>
                         </form>
                 </div>

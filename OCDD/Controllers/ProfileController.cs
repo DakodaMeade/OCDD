@@ -8,7 +8,8 @@ namespace OCDD.Controllers
     public class ProfileController : Controller
     {
         SecurityService securityService = new SecurityService();
-        
+
+        [CustomAuthorization]
         public IActionResult Index()
         {
             //SecurityService securityService = new SecurityService();
@@ -22,13 +23,14 @@ namespace OCDD.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-
+        [CustomAuthorization]
         public IActionResult UpdateProfile(UserModel user)
         {
             
             securityService.UpdateProfile(user);
             return View("Index", user);
         }
+        [CustomAuthorization]
         public IActionResult UpdatePassword(UserModel user)
         {
            

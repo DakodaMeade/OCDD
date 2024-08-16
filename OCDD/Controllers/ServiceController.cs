@@ -5,6 +5,7 @@ using OCDD.Services;
 
 namespace OCDD.Controllers
 {
+    [AdminAuthorization]
     public class ServiceController : Controller
     {
         ServiceService serviceService = new ServiceService();

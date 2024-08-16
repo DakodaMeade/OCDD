@@ -390,7 +390,7 @@ namespace OCDD.Services
         {
             List<AppointmentModel> appointments = new List<AppointmentModel>();
             bool userAppointment = false;
-
+            // join all tables associated to the appointments table
             string sqlStatement = @"
         SELECT
             a.appointmentID, a.serviceID, a.dateTime, a.vehicleYear, a.vehicleMake, a.vehicleModel, a.name, a.phoneNumber, a.address, a.zipCode, a.city, a.state, a.email,
@@ -475,18 +475,98 @@ namespace OCDD.Services
             return appointments;
         }
 
+        // Old time slot information with out service input from user
+        //public List<DateTime> GetAvailableTimeSlots(DateTime date)
+        //{
+        //    List<DateTime> availableSlots = new List<DateTime>();
+        //    List<TimeSlot> bookedSlots = new List<TimeSlot>();
 
-        public List<DateTime> GetAvailableTimeSlots(DateTime date)
+        //    try
+        //    {
+        //        // Retrieve all booked slots and their durations
+        //        string sqlStatement = @"
+        //    SELECT a.dateTime AS startTime, 
+        //           s.duration
+        //    FROM appointments a
+        //    JOIN services s ON a.serviceID = s.serviceID
+        //    WHERE DATE(a.dateTime) = @date
+        //    ORDER BY startTime";
+
+        //        using (MySqlConnection connection = new MySqlConnection(connectionString))
+        //        {
+        //            MySqlCommand command = new MySqlCommand(sqlStatement, connection);
+        //            command.Parameters.AddWithValue("@date", date.ToString("yyyy-MM-dd"));
+
+        //            connection.Open();
+        //            MySqlDataReader reader = command.ExecuteReader();
+
+        //            while (reader.Read())
+        //            {
+        //                DateTime startTime = reader.GetDateTime("startTime");
+        //                TimeSpan duration = reader.GetTimeSpan("duration"); // Assuming duration is stored as TimeSpan
+        //                DateTime endTime = startTime.Add(duration);
+
+        //                bookedSlots.Add(new TimeSlot { startTime = startTime, endTime = endTime });
+        //            }
+        //        }
+
+        //        // Define working hours
+        //        TimeSpan workingStartTime = new TimeSpan(8, 0, 0); // 8 AM
+        //        TimeSpan workingEndTime = new TimeSpan(17, 0, 0);  // 5 PM
+
+        //        // Generate all possible 30-minute slots within working hours
+        //        DateTime currentSlotStart = date.Date.Add(workingStartTime);
+        //        DateTime workEnd = date.Date.Add(workingEndTime);
+
+        //        while (currentSlotStart < workEnd)
+        //        {
+        //            DateTime currentSlotEnd = currentSlotStart.AddMinutes(30);
+
+        //            // Check if this slot overlaps with any booked slots
+        //            bool isAvailable = true;
+        //            foreach (var bookedSlot in bookedSlots)
+        //            {
+        //                if (!(currentSlotEnd <= bookedSlot.startTime || currentSlotStart >= bookedSlot.endTime))
+        //                {
+        //                    isAvailable = false;
+        //                    break;
+        //                }
+        //            }
+
+        //            // If the slot is available, add it to the list
+        //            if (isAvailable)
+        //            {
+        //                availableSlots.Add(currentSlotStart);
+        //            }
+
+        //            // Move to the next 30-minute slot
+        //            currentSlotStart = currentSlotEnd;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //    }
+
+        //    return availableSlots;
+        //}
+        /// <summary>
+        /// Returns the avaible time slots based on scheduled appoitnemtns and the selected service of the user
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="serviceDuration"></param>
+        /// <returns></returns>
+        public List<DateTime> GetAvailableTimeSlots(DateTime date, TimeSpan serviceDuration)
         {
             List<DateTime> availableSlots = new List<DateTime>();
-            List<TimeSlot> bookedSlots = new List<TimeSlot>();
+            List<TimeSlotModel> bookedSlots = new List<TimeSlotModel>();
 
             try
             {
-                // Step 1: Retrieve all booked slots and their durations
+                // Retrieve all booked slots and their durations
                 string sqlStatement = @"
             SELECT a.dateTime AS startTime, 
-                   DATE_ADD(a.dateTime, INTERVAL s.duration MINUTE) AS endTime
+                   s.duration
             FROM appointments a
             JOIN services s ON a.serviceID = s.serviceID
             WHERE DATE(a.dateTime) = @date
@@ -503,33 +583,45 @@ namespace OCDD.Services
                     while (reader.Read())
                     {
                         DateTime startTime = reader.GetDateTime("startTime");
-                        DateTime endTime = reader.GetDateTime("endTime");
-
-                        bookedSlots.Add(new TimeSlot { StartTime = startTime, EndTime = endTime });
+                        TimeSpan duration = reader.GetTimeSpan("duration"); 
+                        DateTime endTime = startTime.Add(duration);
+                        // add the timeslots to the list of booked appointments
+                        bookedSlots.Add(new TimeSlotModel { startTime = startTime, endTime = endTime });
                     }
                 }
 
-                // Step 2: Define working hours
+                // Define working hours
+                // may add this to be changed by the admin later
                 TimeSpan workingStartTime = new TimeSpan(8, 0, 0); // 8 AM
                 TimeSpan workingEndTime = new TimeSpan(17, 0, 0);  // 5 PM
 
-                // Step 3: Check for available slots between booked appointments
+                // Generate all possible slots within working hours
                 DateTime currentSlotStart = date.Date.Add(workingStartTime);
+                DateTime workEnd = date.Date.Add(workingEndTime);
 
-                foreach (var bookedSlot in bookedSlots)
+                while (currentSlotStart.Add(serviceDuration) <= workEnd)
                 {
-                    // Check for available slot before the current booked slot
-                    if (currentSlotStart < bookedSlot.StartTime)
+                    DateTime currentSlotEnd = currentSlotStart.Add(serviceDuration);
+
+                    // Check if this slot overlaps with any booked slots
+                    bool isAvailable = true;
+                    foreach (var bookedSlot in bookedSlots)
+                    {
+                        if (!(currentSlotEnd <= bookedSlot.startTime || currentSlotStart >= bookedSlot.endTime))
+                        {
+                            isAvailable = false;
+                            break;
+                        }
+                    }
+
+                    // If the slot is available, add it to the list
+                    if (isAvailable)
                     {
                         availableSlots.Add(currentSlotStart);
                     }
-                    currentSlotStart = bookedSlot.EndTime;
-                }
 
-                // Check for available slot after the last booked slot
-                if (currentSlotStart < date.Date.Add(workingEndTime))
-                {
-                    availableSlots.Add(currentSlotStart);
+                    // Move to the next 30-minute slot
+                    currentSlotStart = currentSlotStart.AddMinutes(30);
                 }
             }
             catch (Exception ex)
@@ -540,11 +632,7 @@ namespace OCDD.Services
             return availableSlots;
         }
 
-        public class TimeSlot
-        {
-            public DateTime StartTime { get; set; }
-            public DateTime EndTime { get; set; }
-        }
+        
 
 
     }

@@ -9,7 +9,12 @@ namespace OCDD.Controllers
     {
         AppointmentService appointmentService = new AppointmentService();
         ServiceService serviceService = new ServiceService();
-        // Display the scheduling form
+
+
+        /// <summary>
+        /// Display the scheduling form
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Index()
         {
@@ -19,7 +24,11 @@ namespace OCDD.Controllers
             return View();
         }
 
-        // Handle the form submission
+        /// <summary>
+        /// Handle the form submission
+        /// </summary>
+        /// <param name="appointment"></param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult Schedule(AppointmentModel appointment)
         {
@@ -49,13 +58,24 @@ namespace OCDD.Controllers
             appointment = appointmentService.GetAppointment(appointmentID);
             return View("AppointmentConfirmation", appointment);
         }
-
+        /// <summary>
+        /// Returns the available time slots
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="serviceDuration"></param>
+        /// <returns></returns>
         [HttpGet]
-        public IActionResult GetAvailableTimeSlots(DateTime date)
+        public IActionResult GetAvailableTimeSlots(DateTime date, string serviceDuration)
         {
             try
             {
-                var availableSlots = appointmentService.GetAvailableTimeSlots(date);
+                // Convert the serviceDuration string to TimeSpan
+                if (!TimeSpan.TryParse(serviceDuration, out TimeSpan parsedServiceDuration))
+                {
+                    return BadRequest("Invalid service duration format.");
+                }
+
+                var availableSlots = appointmentService.GetAvailableTimeSlots(date, parsedServiceDuration);
                 var timeSlots = availableSlots.Select(slot => slot.ToString("HH:mm")).ToList();
 
                 return Json(timeSlots); // Return time slots as JSON
@@ -66,14 +86,6 @@ namespace OCDD.Controllers
                 Console.WriteLine(ex.Message);
                 return StatusCode(500, "An error occurred while retrieving time slots.");
             }
-        }
-
-
-
-        // Display the confirmation page
-        public IActionResult Confirmation()
-        {
-            return View();
         }
 
         

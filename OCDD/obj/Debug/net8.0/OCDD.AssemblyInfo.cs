@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OCDD")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c3fdde4c3548a4ae8917954e266793adeba7fcbe")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b4cd676b77e8c17d86ec3acf7475d641d6c18d37")]
 [assembly: System.Reflection.AssemblyProductAttribute("OCDD")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OCDD")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

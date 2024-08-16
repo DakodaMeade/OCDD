@@ -2,8 +2,6 @@
 
 /*
  * Dakoda Meade
- * CST-350
- * Activity 2-2
  * Security Servce calss
  */
 namespace OCDD.Services

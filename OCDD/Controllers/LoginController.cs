@@ -19,23 +19,18 @@ namespace OCDD.Controllers
 	public class LoginController : Controller
 	{
 		// logger object
-		private static Logger logger = LogManager.GetLogger("LoginAppLoggerrule");
+		//private static Logger logger = LogManager.GetLogger("LoginAppLoggerrule");
 
 
 
 		// Login/Index
 		public IActionResult Index()
 		{
-            logger.Info("Entering the process login method");
-            MyLogger.GetInstance().Info("Entering the process login method");
+            //logger.Info("Entering the process login method");
+            //MyLogger.GetInstance().Info("Entering the process login method");
             return View();
 		}
-		[HttpGet]
-		[CustomAuthorization]
-		public IActionResult PrivateSectionMustBeLoggedIn()
-		{
-			return Content("I am a protected method if the proper attribute is applied to me.");
-		}
+		
 
 
 

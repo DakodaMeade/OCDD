@@ -8228,11 +8228,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\School\\GCU\\CST-451 Projects\\OCDD\\OCDD\\OCDD.csproj",
+      "projectUniqueName": "D:\\School\\GCU\\CST-451-452 Projects\\OCDD\\OCDD\\OCDD.csproj",
       "projectName": "OCDD",
-      "projectPath": "D:\\School\\GCU\\CST-451 Projects\\OCDD\\OCDD\\OCDD.csproj",
+      "projectPath": "D:\\School\\GCU\\CST-451-452 Projects\\OCDD\\OCDD\\OCDD.csproj",
       "packagesPath": "C:\\Users\\Dakoda\\.nuget\\packages\\",
-      "outputPath": "D:\\School\\GCU\\CST-451 Projects\\OCDD\\OCDD\\obj\\",
+      "outputPath": "D:\\School\\GCU\\CST-451-452 Projects\\OCDD\\OCDD\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Dakoda\\AppData\\Roaming\\NuGet\\NuGet.Config",

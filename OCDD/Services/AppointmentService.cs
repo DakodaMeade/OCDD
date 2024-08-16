@@ -52,10 +52,13 @@ namespace OCDD.Services
             appointmentDAO.CompleteAppointment(appointmentID);
         }
 
-        public List<DateTime> GetAvailableTimeSlots(DateTime dateTime)
+        //public List<DateTime> GetAvailableTimeSlots(DateTime dateTime)
+        //{
+        //   return appointmentDAO.GetAvailableTimeSlots(dateTime);
+        //}
+        public List<DateTime> GetAvailableTimeSlots(DateTime dateTime, TimeSpan serviceDuration)
         {
-           return appointmentDAO.GetAvailableTimeSlots(dateTime);
+            return appointmentDAO.GetAvailableTimeSlots(dateTime, serviceDuration);
         }
-
     }
 }
