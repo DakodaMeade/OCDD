@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-//
+// Class for veriftying if an admin user logged in
 namespace OCDD.Controllers
 {
     public class AdminAuthorizationAttribute : Attribute, IAuthorizationFilter
