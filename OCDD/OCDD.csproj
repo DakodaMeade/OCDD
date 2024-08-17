@@ -17,7 +17,7 @@
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
   </ItemGroup>
-
+  
   <ItemGroup>
     <Folder Include="wwwroot\Images\" />
   </ItemGroup>
