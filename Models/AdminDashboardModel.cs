@@ -3,6 +3,7 @@
     /// <summary>
     /// Dakoda Meade
     /// This class is the view model for the admin dashboard
+    /// 
     /// </summary>
     public class AdminDashboardModel
     {
