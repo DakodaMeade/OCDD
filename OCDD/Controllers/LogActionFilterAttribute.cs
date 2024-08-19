@@ -6,8 +6,6 @@ using OCDD.Services.Utility;
 
 /*
  * Dakoda Meade
- * CST-350
- * Activity 6-2
  * log action filter
  * 
  */
