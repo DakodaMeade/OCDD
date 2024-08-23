@@ -9,6 +9,42 @@
       "PackagePath": "staticwebassets\\Images\\HomeImage.jpg"
     },
     {
+      "Id": "D:\\School\\GCU\\CST-451-452 Project\\OCDD\\OCDD\\wwwroot\\Images\\review1-1.jpg",
+      "PackagePath": "staticwebassets\\Images\\review1-1.jpg"
+    },
+    {
+      "Id": "D:\\School\\GCU\\CST-451-452 Project\\OCDD\\OCDD\\wwwroot\\Images\\review1-2.jpg",
+      "PackagePath": "staticwebassets\\Images\\review1-2.jpg"
+    },
+    {
+      "Id": "D:\\School\\GCU\\CST-451-452 Project\\OCDD\\OCDD\\wwwroot\\Images\\review1-3.jpg",
+      "PackagePath": "staticwebassets\\Images\\review1-3.jpg"
+    },
+    {
+      "Id": "D:\\School\\GCU\\CST-451-452 Project\\OCDD\\OCDD\\wwwroot\\Images\\review2-1.jpg",
+      "PackagePath": "staticwebassets\\Images\\review2-1.jpg"
+    },
+    {
+      "Id": "D:\\School\\GCU\\CST-451-452 Project\\OCDD\\OCDD\\wwwroot\\Images\\review2-2.jpg",
+      "PackagePath": "staticwebassets\\Images\\review2-2.jpg"
+    },
+    {
+      "Id": "D:\\School\\GCU\\CST-451-452 Project\\OCDD\\OCDD\\wwwroot\\Images\\review2-3.jpg",
+      "PackagePath": "staticwebassets\\Images\\review2-3.jpg"
+    },
+    {
+      "Id": "D:\\School\\GCU\\CST-451-452 Project\\OCDD\\OCDD\\wwwroot\\Images\\review3-1.jpg",
+      "PackagePath": "staticwebassets\\Images\\review3-1.jpg"
+    },
+    {
+      "Id": "D:\\School\\GCU\\CST-451-452 Project\\OCDD\\OCDD\\wwwroot\\Images\\review3-2.jpg",
+      "PackagePath": "staticwebassets\\Images\\review3-2.jpg"
+    },
+    {
+      "Id": "D:\\School\\GCU\\CST-451-452 Project\\OCDD\\OCDD\\wwwroot\\Images\\review3-3.jpg",
+      "PackagePath": "staticwebassets\\Images\\review3-3.jpg"
+    },
+    {
       "Id": "D:\\School\\GCU\\CST-451-452 Project\\OCDD\\OCDD\\wwwroot\\css\\bootstrap.css",
       "PackagePath": "staticwebassets\\css\\bootstrap.css"
     },
