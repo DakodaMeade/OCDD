@@ -14,11 +14,20 @@ namespace OCDD.Controllers
 {
     public class AppointmentsFilterController : Controller
     {
+        // Sets up services
         SecurityService securityService = new SecurityService();
         AppointmentService appointmentService = new AppointmentService();
         //List<AppointmentModel> appointments = new List<AppointmentModel>();
-        
 
+        /// <summary>
+        /// Filters appoitnemtns based on user selection.
+        /// </summary>
+        /// <param name="status"> user input of appointment status</param>
+        /// <param name="appointmentId">  user input of appointment id </param>
+        /// <param name="startDate"> user input of start date of range </param>
+        /// <param name="endDate">  user input of end date of range </param>
+        /// <param name="source">  source of the page where filtering is done </param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult Filter(string status, int appointmentId, DateTime? startDate, DateTime? endDate, string source)
         {

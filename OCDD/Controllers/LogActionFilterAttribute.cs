@@ -7,7 +7,8 @@ using OCDD.Services.Utility;
 /*
  * Dakoda Meade
  * log action filter
- * 
+ * Logging class
+ * This has not been completed!!!!!
  */
 namespace OCDD.Controllers
 {

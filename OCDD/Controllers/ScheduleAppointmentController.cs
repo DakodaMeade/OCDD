@@ -1,7 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OCDD.Models;
 using OCDD.Services;
-
+/*
+ * Dakoda Meade
+ * Schedule Appoitnemtn Controller
+ * Manages the scheduling appointments and their views
+ * 
+ */
 
 namespace OCDD.Controllers
 {
@@ -46,22 +51,24 @@ namespace OCDD.Controllers
             {
                 int userID = Int32.Parse(HttpContext.Session.GetString("userID"));
                 appointment.user = new UserModel { userID = userID };
+                // saves appoitnemnt for user to DB
                 appointmentID = appointmentService.SaveAppointmentUser(appointment);
-
-                
             }
             else
             {
+                // saves appoitnemtn for nonuser To DB
                 appointmentID = appointmentService.SaveAppointmentNonUser(appointment);
                 
             }
+            // get the appoitnemtn information to display on confirmation page
             appointment = appointmentService.GetAppointment(appointmentID);
+            // displays appoitnemtn confirmatino page
             return View("AppointmentConfirmation", appointment);
         }
         /// <summary>
-        /// Returns the available time slots
+        /// Returns the available time slots with client side 
         /// </summary>
-        /// <param name="date"></param>
+        /// <param name="date">users date selected</param>
         /// <param name="serviceDuration"></param>
         /// <returns></returns>
         [HttpGet]
@@ -74,8 +81,9 @@ namespace OCDD.Controllers
                 {
                     return BadRequest("Invalid service duration format.");
                 }
-
+                // stores available timeslots in var
                 var availableSlots = appointmentService.GetAvailableTimeSlots(date, parsedServiceDuration);
+                // convert time slots to 12 hour clock
                 var timeSlots = availableSlots.Select(slot => slot.ToString("HH:mm")).ToList();
 
                 return Json(timeSlots); // Return time slots as JSON

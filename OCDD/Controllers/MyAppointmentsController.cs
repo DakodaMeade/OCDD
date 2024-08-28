@@ -2,17 +2,25 @@
 using OCDD.Models;
 using OCDD.Services;
 using System.Collections.Generic;
-
+/*
+ * Dakoda Meade
+ * My Appointments Controller
+ * It displays all the appointments of the user. Upcomming and past appoitnments. Allowing the user to view the details of the appoitnemtn
+ * 
+ */
 namespace OCDD.Controllers
 {
     [CustomAuthorization]
     public class MyAppointmentsController : Controller
     {
-
+        // set up services
         SecurityService securityService = new SecurityService();
         AppointmentService appointmentService = new AppointmentService();
 
-        
+        /// <summary>
+        /// Displays the My appointment page with appointment info
+        /// </summary>
+        /// <returns>Appointment index view</returns>
         public IActionResult Index()
         {
             // gets the user that is logged in 
@@ -41,7 +49,7 @@ namespace OCDD.Controllers
             user.upcomingAppointments = upcomingAppointments;
             user.pastAppointments = pastAppointments;
 
-
+            // return the view with the user.
             return View(user);
         }
     }
