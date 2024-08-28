@@ -401,7 +401,7 @@ namespace OCDD.Services
             appointments a
         JOIN 
             services s ON a.serviceID = s.serviceID
-        JOIN
+        LEFT JOIN
             users u ON a.userID = u.userID
         JOIN
             appointment_status st ON a.statusID = st.statusID
