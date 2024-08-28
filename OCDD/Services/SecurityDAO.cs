@@ -19,7 +19,10 @@ namespace OCDD.Services
 		//string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=OCDDetailing_DB;Integrated Security=True;Connect Timeout=30;Encrypt=False;
         //TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
-        string connectionString = "Server=127.0.0.1;Database=ocddetailing_db;User ID=root;Password=root;Pooling=false;";
+        //local db
+        //string connectionString = "Server=127.0.0.1;Database=ocddetailing_db;User ID=root;Password=root;Pooling=false;";
+
+        string connectionString = "Server=ocddetailingmysql.mysql.database.azure.com;Database=ocddetailing_db;User ID=dmeade;Password=Cpt.Cuddles96;Pooling=false;";
 
 
         public bool FindByEmailAndPassword(UserModel user)

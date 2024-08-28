@@ -11,10 +11,10 @@ namespace OCDD.Services
 {
     public class AppointmentDAO
     {
-        // database connection string
-        string connectionString = "Server=127.0.0.1;Database=ocddetailing_db;User ID=root;Password=root;Pooling=false;";
-
-
+        // database connection string Local
+        //string connectionString = "Server=127.0.0.1;Database=ocddetailing_db;User ID=root;Password=root;Pooling=false;";
+        // Azure
+        string connectionString = "Server=ocddetailingmysql.mysql.database.azure.com;Database=ocddetailing_db;User ID=dmeade;Password=Cpt.Cuddles96;Pooling=false;";
         // Save the appointment to the database
         public int SaveAppointmentUser(AppointmentModel appointment)
         {

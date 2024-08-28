@@ -9,8 +9,11 @@ namespace OCDD.Services
 {
     public class ServiceDAO
     {
-        // connection string for database
-        string connectionString = "Server=127.0.0.1;Database=ocddetailing_db;User ID=root;Password=root;Pooling=false;";
+        // connection string for database local
+       // string connectionString = "Server=127.0.0.1;Database=ocddetailing_db;User ID=root;Password=root;Pooling=false;";
+
+        //Azure
+        string connectionString = "Server=ocddetailingmysql.mysql.database.azure.com;Database=ocddetailing_db;User ID=dmeade;Password=Cpt.Cuddles96;Pooling=false;";
         // get all services from database
         public List<ServiceModel> GetServices()
         {
