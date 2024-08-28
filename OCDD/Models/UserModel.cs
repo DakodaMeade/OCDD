@@ -45,6 +45,7 @@ namespace OCDD.Models
 
         [Required]
         [EmailAddress(ErrorMessage = "Invalid Email")]
+        [StringLength(50, MinimumLength = 4)]
         [DisplayName("Email")]
         public string email { get; set; }
 
