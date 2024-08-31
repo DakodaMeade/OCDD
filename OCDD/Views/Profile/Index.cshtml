@@ -1,5 +1,10 @@
 ﻿@model OCDD.Models.UserModel
-
+@{
+    // Profile view
+    // Display user profile information and allows for editing
+    // Personal and password info can be seperated 
+    ViewData["Title"] = "Profile";
+}
 <h4>Profile</h4>
 <hr />
 
@@ -79,6 +84,7 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
         <script>
+            // enables forms to be edited based on the edit button that is clicked
             function enableEdit(formId, buttonsId, validationClass) {
                 var form = document.getElementById(formId);
                 var buttons = document.getElementById(buttonsId);

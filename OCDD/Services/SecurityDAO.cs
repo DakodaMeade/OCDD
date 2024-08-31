@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 /*
  * Dakoda Meade
  * SecurityDAO classworking with user information in database
+ * Handles user informatino interactions with the databse
  */
 namespace OCDD.Services
 {
@@ -22,11 +23,17 @@ namespace OCDD.Services
         //local db
         //string connectionString = "Server=127.0.0.1;Database=ocddetailing_db;User ID=root;Password=root;Pooling=false;";
 
+        // Azure conntection string
         string connectionString = "Server=ocddetailingmysql.mysql.database.azure.com;Database=ocddetailing_db;User ID=dmeade;Password=Cpt.Cuddles96;Pooling=false;";
 
-
+        /// <summary>
+        /// Finsds the user by the email and password
+        /// </summary>
+        /// <param name="user"> user object </param>
+        /// <returns> Returns if user is found or not  </returns>
         public bool FindByEmailAndPassword(UserModel user)
         {
+            // initialize to false by default
             bool success = false;
             string sqlStatement = "SELECT password FROM Users WHERE email = @email";
 
@@ -37,7 +44,7 @@ namespace OCDD.Services
 
                     MySqlCommand command = new MySqlCommand(sqlStatement, connection);
 
-                    // Use AddWithValue for MySQL parameters
+                    
                     command.Parameters.AddWithValue("@email", user.email);
 
                     connection.Open();
@@ -65,11 +72,15 @@ namespace OCDD.Services
                 Console.WriteLine(ex.ToString());
                 Console.WriteLine("Connection to database is Not successful!");
             }
-
+            // returns if success or failure
             return success;
         }
 
-        // returns a complete UserModel based on a user's Id
+        /// <summary>
+        /// returns a complete UserModel based on a user's Id
+        /// </summary>
+        /// <param name="userId"> user id </param>
+        /// <returns> The user </returns>
         public UserModel GetUserById(int userId)
         {
             UserModel resultUser = null;
@@ -95,11 +106,12 @@ namespace OCDD.Services
 
                     if (reader.HasRows)
                     {
-                        reader.Read(); // Move to the first (and only) row
+                        // read the row
+                        reader.Read(); 
 
-                        // Assuming UserId is an integer, adjust the column name accordingly
+                        
                         int id = reader.GetInt32(reader.GetOrdinal("userID"));
-                            // Assuming other properties in UserModel, adjust accordingly
+                        // user properties 
                         string name = reader.GetString(reader.GetOrdinal("name"));
                         string phoneNumber = reader.GetString(reader.GetOrdinal("phoneNumber"));
                         string address = reader.GetString(reader.GetOrdinal("address"));
@@ -108,6 +120,7 @@ namespace OCDD.Services
                         string state = reader.GetString(reader.GetOrdinal("state"));
                         string email = reader.GetString(reader.GetOrdinal("email"));
                         string roleName = reader.GetString(reader.GetOrdinal("roleName"));
+                        // store result into user object
                         resultUser = new UserModel
                         {
                             userID = userId,
@@ -128,14 +141,17 @@ namespace OCDD.Services
             {
                 Console.WriteLine(ex.Message);
             }
-
+            // return the found user object
             return resultUser;
         }
 
-        // Method to add a new user to the database
+        /// <summary>
+        /// Method to add a new user to the database
+        /// </summary>
+        /// <param name="user"> user object </param>
         public void AddUser(UserModel user)
         {
-            
+            // insert staement for user object
             string sqlStatement = "INSERT INTO Users (name, phoneNumber, address, zipCode, city, state, email, password) VALUES (@name, @phoneNumber, @address, @zipCode, @city, @state, @email, @password)";
 
             try
@@ -169,6 +185,12 @@ namespace OCDD.Services
 
         }
 
+
+        /// <summary>
+        /// Checks if the emails exists in the database
+        /// </summary>
+        /// <param name="user"> user object </param>
+        /// <returns>true if email exists false if not</returns>
         public bool FindUserByEmail(UserModel user)
         {
             // set exists = false 
@@ -199,10 +221,15 @@ namespace OCDD.Services
             {
                 Console.WriteLine(ex.Message);
             }
-
+            // if email exists or not
             return exists;
         }
 
+        /// <summary>
+        /// Obtains user id with the email
+        /// </summary>
+        /// <param name="user"> user object</param>
+        /// <returns> the user id </returns>
         public int FindUserIDByEmail(UserModel user)
         {
             // userID to 0
@@ -238,21 +265,23 @@ namespace OCDD.Services
             {
                 Console.WriteLine(ex.Message);
             }
-
+            // returns the user id
             return userID;
         }
 
         /// <summary>
         /// Method for updating the user's profile not including the password
         /// </summary>
-        /// <param name="user"></param>
+        /// <param name="user">user object </param>
         public void UpdateProfile(UserModel user)
         {
+            // update statement
             string sqlStatement = "UPDATE users SET name = @name, phoneNumber = @phoneNumber, city = @city, address = @address, zipCode = @zipCode, state = @state, email = @email WHERE userID = @userID";
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
+                    // set the user inforamtion 
                     MySqlCommand command = new MySqlCommand(sqlStatement, connection);
                     command.Parameters.AddWithValue("@userID", user.userID);
                     command.Parameters.AddWithValue("@name", user.name);
@@ -276,9 +305,13 @@ namespace OCDD.Services
             }
         }
 
-
+        /// <summary>
+        /// Update the user password in the database
+        /// </summary>
+        /// <param name="user">user object</param>
         public void UpdatePassword(UserModel user)
         {
+            // update statement
             string sqlStatement = "UPDATE users SET password = @password WHERE userID = @userID";
             try
             {
@@ -302,7 +335,11 @@ namespace OCDD.Services
         }
 
 
-
+        /// <summary>
+        /// Hashes the password using SHA 256 for database storage
+        /// </summary>
+        /// <param name="password"> password </param>
+        /// <returns>the hashed password</returns>
         private string HashPassword(string password)
         {
             using (SHA256 sha256Hash = SHA256.Create())

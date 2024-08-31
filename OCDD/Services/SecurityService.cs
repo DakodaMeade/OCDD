@@ -3,11 +3,13 @@
 /*
  * Dakoda Meade
  * Security Servce calss
+ * handles the interaction between the controllers and the secuirty DAO
  */
 namespace OCDD.Services
 {
 	public class SecurityService
 	{
+        // initailize DAO
         SecurityDAO securityDAO = new SecurityDAO();
 
         // Method for validating a user trying to login
@@ -41,12 +43,12 @@ namespace OCDD.Services
             return securityDAO.GetUserById(userId);
         }
 
-        
+        // updates the user personal inforamtion
         public void UpdateProfile(UserModel user) 
         {
             securityDAO.UpdateProfile(user);
         }
-
+        // update the users password
         public void UpdatePassword(UserModel user)
         {
             securityDAO.UpdatePassword(user);

@@ -2,6 +2,9 @@
 @using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
 @{
+    // Appointment View
+    // Displays appoitnemnt information
+    // Allows admins to complete and cancel appoitnemts and users to cancel them if they are in scheduled status
     ViewData["Title"] = "Appointment Details";
     var source = ViewData["Source"] as string;
 }
@@ -127,10 +130,12 @@
                 </dd>
             </dl>
             @if (Model.status == "Scheduled"){
+                // If appoitnemnt is in schedule status show more buttons otherwise show a back button
             <div class="row">
-
+                    
                     @if (source == "AdminDashboard")
                     {
+                        // if admin show complete appoitnemnt button otherwise show the cancel appointment button
                         <div class="col text-left">
                             <form id="completeForm" action="@Url.Action("CompleteAppointment", "Appointment", new { appointmentID = Model.appointmentID })" method="post">
                                 <button type="submit" class="btn btn-success" onclick="return confirmComplete()">Complete</button>

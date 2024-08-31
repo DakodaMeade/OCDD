@@ -7,6 +7,7 @@ namespace OCDD.Models
 * Dakoda Meade
 * OCDD Project
 * Service Model class 
+* Represents a service
 */
 	public class ServiceModel
 	{

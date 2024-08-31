@@ -1,8 +1,7 @@
 ﻿/*
  * Dakoda Meade
- * CST-350
- * Activity 6-2
  * Logger interface class
+ * not currently being used
  * 
  */
 namespace OCDD.Services.Utility

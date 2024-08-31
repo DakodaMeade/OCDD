@@ -6,26 +6,35 @@ using OCDD.Models;
 using System.Web.Helpers;
 using System.Xml.Linq;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-
+/*
+ * Dakoda Meade
+ * Appointment DAO Class
+ * Handles all interactions with appoitnemtn information with the database
+ */
 namespace OCDD.Services
 {
     public class AppointmentDAO
     {
         // database connection string Local
         //string connectionString = "Server=127.0.0.1;Database=ocddetailing_db;User ID=root;Password=root;Pooling=false;";
-        // Azure
+        // Azure conntection string
         string connectionString = "Server=ocddetailingmysql.mysql.database.azure.com;Database=ocddetailing_db;User ID=dmeade;Password=Cpt.Cuddles96;Pooling=false;";
-        // Save the appointment to the database
+        /// <summary>
+        /// Save the appointment to the database for a user
+        /// </summary>
+        /// <param name="appointment">Appointment object</param>
+        /// <returns>The appoinmtentID of the appoitnemt what was just entered into the databse</returns>
         public int SaveAppointmentUser(AppointmentModel appointment)
         {
             int appointmentId = 0;
             try
             {
-                
-                string sqlStatement = "INSERT INTO appointments (userID, serviceID, dateTime, vehicleYear, vehicleMake, vehicleModel) VALUES (@userID, @serviceID, @dateTime, @vehicleYear, @vehicleMake, @vehicleModel); SELECT LAST_INSERT_ID();";
-
+                // MY SQL statement
+                string sqlStatement = "INSERT INTO appointments (userID, serviceID, dateTime, vehicleYear, vehicleMake, vehicleModel) VALUES (@userID, @serviceID, @dateTime, @vehicleYear, @vehicleMake, @vehicleModel); SELECT LAST_INSERT_ID();";// selected the last entered id to return
+                 
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
+                    // set up command
                     MySqlCommand command = new MySqlCommand(sqlStatement, connection);
                     command.Parameters.AddWithValue("@UserID", appointment.user.userID);
                     command.Parameters.AddWithValue("@ServiceID", appointment.service.serviceID);
@@ -35,25 +44,30 @@ namespace OCDD.Services
                     command.Parameters.AddWithValue("@vehicleModel", appointment.vehicleModel);
 
                     connection.Open();
-                    appointmentId = Convert.ToInt32(command.ExecuteScalar());
+                    appointmentId = Convert.ToInt32(command.ExecuteScalar()); // store id to return
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
+            // the appointment id of the new row that was entered
             return appointmentId;
         }
 
-        // Save the appointment to the database
+        /// <summary>
+        /// Save the appointment to the database for non logged in user
+        /// </summary>
+        /// <param name="appointment">Appointment object</param>
+        /// <returns>The appoinmtentID of the appoitnemt what was just entered into the databse</returns>
         public int SaveAppointmentNonUser(AppointmentModel appointment)
         {
             int appointmentId = 0;
 
             try
             {
-
-                string sqlStatement = "INSERT INTO appointments (serviceID, dateTime, vehicleYear, vehicleMake, vehicleModel, name, phoneNumber, address, zipCode, city, state, email) VALUES (@serviceID, @dateTime, @vehicleYear, @vehicleMake, @vehicleModel, @name, @phoneNumber, @address, @zipCode, @city, @state, @email); SELECT LAST_INSERT_ID();";
+                // MY SQL statemnt
+                string sqlStatement = "INSERT INTO appointments (serviceID, dateTime, vehicleYear, vehicleMake, vehicleModel, name, phoneNumber, address, zipCode, city, state, email) VALUES (@serviceID, @dateTime, @vehicleYear, @vehicleMake, @vehicleModel, @name, @phoneNumber, @address, @zipCode, @city, @state, @email); SELECT LAST_INSERT_ID();";// get id of the row of the new appoitnemtn insert
 
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
                 {
@@ -73,21 +87,25 @@ namespace OCDD.Services
                     command.Parameters.AddWithValue("@email", appointment.email);
 
                     connection.Open();
-                    appointmentId = Convert.ToInt32(command.ExecuteScalar());
+                    appointmentId = Convert.ToInt32(command.ExecuteScalar()); // store id to return
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-
+            // the appointment id of the new row that was entered
             return appointmentId;
         }
 
-        // Return the appointment based on the ID
+        /// <summary>
+        /// Return the appointment based on the ID
+        /// </summary>
+        /// <param name="appointmentID">Appoitnment ID</param>
+        /// <returns>Appointment Object found in the database</returns>
         public AppointmentModel GetAppointmentByID(int appointmentID)
         {
-
+            // initialize
             AppointmentModel appointment = null;
             bool userAppointment = IsUserAppointment(appointmentID); // return if a logged in user created
             try
@@ -190,18 +208,23 @@ namespace OCDD.Services
             {
                 Console.WriteLine(ex.Message);
             }
-
+            // the found appoitnment
             return appointment;
         }
        
 
 
-
+        /// <summary>
+        /// Obtains all the appointments for a USER based on the ID of that user
+        /// </summary>
+        /// <param name="userID"> USER ID</param>
+        /// <returns>List of appointments found for the user</returns>
         public List<AppointmentModel> GetAppointmentsByUserID(int userID)
         {
+            // initialize list
             List<AppointmentModel> appointments = new List<AppointmentModel>();
             bool userAppointment = false;
-
+            // MYSQL statement
             string sqlStatement = @"
         SELECT 
             a.appointmentID, a.serviceID, a.dateTime, a.vehicleYear, a.vehicleMake, a.vehicleModel, a.name, a.phoneNumber, a.address, a.zipCode, a.city, a.state, a.email,
@@ -233,6 +256,7 @@ namespace OCDD.Services
                             var appointment = new AppointmentModel
                             {
                                 appointmentID = reader.GetInt32("appointmentID"),
+                                // service info
                                 service = new ServiceModel
                                 {
                                     serviceID = reader.GetInt32("serviceID"),
@@ -250,6 +274,8 @@ namespace OCDD.Services
                                 status = reader.GetString("status"),
 
                             };
+                            // This is to get if the user was registered before the appoitnemnt was created
+                            // obtains the non registered details over the user information
                             userAppointment = IsUserAppointment(appointment.appointmentID);
                             if (!userAppointment)
                             {
@@ -280,12 +306,19 @@ namespace OCDD.Services
             {
                 Console.WriteLine(ex.Message);
             }
-
+            // the list of user appointments
             return appointments;
         }
 
+        /// <summary>
+        /// This compares the email of a user with that of the email column of every appointment and sets the user ID in it
+        /// This is so that the user can create an appoitnemnt with out logging in and see it under my appoitnemtns view
+        /// </summary>
+        /// <param name="email"> user email</param>
+        /// <param name="userID">user id</param>
         public void UpdateAppointmentsWithUserID(string email, int userID)
         {
+            // MYSQL Statement
             string sqlStatement = @"
         UPDATE appointments
         SET userID = @UserID
@@ -308,11 +341,17 @@ namespace OCDD.Services
             }
         }
 
+        /// <summary>
+        /// Sets appointments status to compelte in database
+        /// </summary>
+        /// <param name="appointmentID"> appointment id</param>
         public void CompleteAppointment(int appointmentID) 
         {
+            // MYSQL statement
+            // 3 = status id for complete in db
             string sqlStatement = @"
         UPDATE appointments
-        SET statusID = 3
+        SET statusID = 3 
         WHERE appointmentID = @appointmentID";
             try
             {
@@ -330,8 +369,15 @@ namespace OCDD.Services
                 Console.WriteLine(ex.Message);
             }
         }
+
+        /// <summary>
+        /// Sets appointments status to Canceled in database
+        /// </summary>
+        /// <param name="appointmentID">appointment id </param>
         public void CancelAppointment(int appointmentID)
         {
+            // MYSQL statement
+            // 2 = status id for canceled in db
             string sqlStatement = @"
         UPDATE appointments
         SET statusID = 2
@@ -353,14 +399,19 @@ namespace OCDD.Services
             }
         }
 
-        // returns if the name in the appointments table is null if the name column is null it returns true which means it is a user scheduled appoitnment 
-        // this is so that if a user registers after all creating an appoitnemnts he can see the details he used from when registered and not user details
+        /// <summary>
+        /// returns if the name in the appointments table is null if the name column is null it returns true which means it is a user scheduled appoitnment 
+        /// this is so that if a user registers after all creating an appoitnemnts he can see the details he used from when registered and not user details
+        /// </summary>
+        /// <param name="appointmentID"></param>
+        /// <returns>if it is a user appoitnment true or false</returns>
         public bool IsUserAppointment(int appointmentID)
         {
+            // sets to false to return if not user appointment
             bool isNull = false;
             try
             {
-
+                // MYSQL statemtnt
                 string sqlStatement = "SELECT name FROM appointments WHERE appointmentID = @appointmentID";
 
                 using (MySqlConnection connection = new MySqlConnection(connectionString))
@@ -385,12 +436,16 @@ namespace OCDD.Services
             return isNull;
         }
 
-        // get all the appoitnemtns for the admin
+        /// <summary>
+        /// get all the appoitnemtns for the admin
+        /// </summary>
+        /// <returns>list of appointments</returns>
         public List<AppointmentModel> GetAllAppointments()
         {
             List<AppointmentModel> appointments = new List<AppointmentModel>();
             bool userAppointment = false;
             // join all tables associated to the appointments table
+            // MYSQL statement only includes the most recent 2000
             string sqlStatement = @"
         SELECT
             a.appointmentID, a.serviceID, a.dateTime, a.vehicleYear, a.vehicleMake, a.vehicleModel, a.name, a.phoneNumber, a.address, a.zipCode, a.city, a.state, a.email,
@@ -424,6 +479,7 @@ namespace OCDD.Services
                             var appointment = new AppointmentModel
                             {
                                 appointmentID = reader.GetInt32("appointmentID"),
+                                // service info
                                 service = new ServiceModel
                                 {
                                     serviceID = reader.GetInt32("serviceID"),
@@ -441,6 +497,7 @@ namespace OCDD.Services
                                 status = reader.GetString("status"),
 
                             };
+                            //user info
                             userAppointment = IsUserAppointment(appointment.appointmentID);
                             if (!userAppointment)
                             {
@@ -471,7 +528,7 @@ namespace OCDD.Services
             {
                 Console.WriteLine(ex.Message);
             }
-
+            // all appoitnemnts 
             return appointments;
         }
 
@@ -550,12 +607,16 @@ namespace OCDD.Services
 
         //    return availableSlots;
         //}
+
+
+
+
         /// <summary>
         /// Returns the avaible time slots based on scheduled appoitnemtns and the selected service of the user
         /// </summary>
-        /// <param name="date"></param>
-        /// <param name="serviceDuration"></param>
-        /// <returns></returns>
+        /// <param name="date"> selected date by user</param>
+        /// <param name="serviceDuration"> th duration of the service selected by the user</param>
+        /// <returns>list of timeslots avaible based on thje selection</returns>
         public List<DateTime> GetAvailableTimeSlots(DateTime date, TimeSpan serviceDuration)
         {
             List<DateTime> availableSlots = new List<DateTime>();

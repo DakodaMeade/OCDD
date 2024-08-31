@@ -2,14 +2,15 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace OCDD.Models
-{
-	/*
+{/*
 * Dakoda Meade
 * OCDD Project
 * Appointment Model class 
+* Rrepresents an appointment
 */
 	public class AppointmentModel
 	{
+        
         [DisplayName("Appointment ID")]
         public int appointmentID { get; set; }
 		//public int serviceID { get; set; }
@@ -73,6 +74,7 @@ namespace OCDD.Models
 
         [Required]
         [EmailAddress(ErrorMessage = "Invalid Email")]
+        [StringLength(50, MinimumLength = 4)]
         [DisplayName("Email")]
         public string email { get; set; }
 

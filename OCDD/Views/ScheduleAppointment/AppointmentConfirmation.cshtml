@@ -2,6 +2,14 @@
 @using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
 
+@{
+    // Appoitnemnt Confirmation View
+    // Displays all appointment info including personal 
+    // Non registered users can click register button that prefill register form 
+    ViewData["Title"] = "Appointment Confirmation";
+
+}
+
 <div class="container mt-5">
     <div class="card mx-auto" style="max-width: 600px;">
         <div class="card-header bg-primary text-white text-center">
@@ -137,6 +145,7 @@
     </style>
     @if (HttpContextAccessor.HttpContext.Session.GetString("userID") == null)
     {
+        // Displays rigister button for non logged in users that prefills the register form with appoitnemnt personal info
         <div class="text-center">
             <a href="@Url.Action("RegisterFromAppointment", "Register", new {
             name = Model.name,

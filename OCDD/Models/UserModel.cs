@@ -7,6 +7,7 @@ namespace OCDD.Models
  * Dakoda Meade
  * OCDD Project
  * User Model class 
+ * Represents a user
  */
 	public class UserModel
 	{
@@ -59,6 +60,7 @@ namespace OCDD.Models
 
 		public string role { get; set; }
 
+        // Users appoitnments
 		public List<AppointmentModel> upcomingAppointments { get; set; }
 		public List<AppointmentModel> pastAppointments { get; set; }
 

@@ -1,9 +1,14 @@
 ﻿using OCDD.Models;
-
+/*
+ * Dakoda Meade
+ * Appointment Service Class
+ * Handles interaction between controllers and DAO classes
+ */
 namespace OCDD.Services
 {
     public class AppointmentService
     {
+        // DAO class initialize
         AppointmentDAO appointmentDAO = new AppointmentDAO();
 
 
@@ -56,6 +61,7 @@ namespace OCDD.Services
         //{
         //   return appointmentDAO.GetAvailableTimeSlots(dateTime);
         //}
+        // return all times slots aviable based on the proviced information
         public List<DateTime> GetAvailableTimeSlots(DateTime dateTime, TimeSpan serviceDuration)
         {
             return appointmentDAO.GetAvailableTimeSlots(dateTime, serviceDuration);

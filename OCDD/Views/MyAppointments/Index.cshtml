@@ -1,6 +1,9 @@
 ﻿@model OCDD.Models.UserModel
 
 @{
+    // My appoitnemnt view
+    // disaplys all user appoitnemnts 
+    // scheduled on top in cards and non scheduled below in a table that allows for filtering using a partial view
     ViewData["Title"] = "My Appointments";
 }
 
@@ -72,6 +75,7 @@
     <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
+        // Date picker for start of range
         const startDatePicker = flatpickr('#startDate', {
             dateFormat: "Y-m-d",
             onChange: function (selectedDates, dateStr) {
@@ -81,7 +85,7 @@
                 }
             }
         });
-
+        // date picker for end of range
         const endDatePicker = flatpickr('#endDate', {
             dateFormat: "Y-m-d",
             onChange: function (selectedDates, dateStr) {
@@ -91,6 +95,7 @@
                 }
             }
         });
+        // Active listener for the reset button. Allows to reset all use inputs to blank, user must click filter bujtton to update results
         document.getElementById('resetButton').addEventListener('click', function () {
             // Clear text inputs
             document.getElementById('appointmentID').value = '';
@@ -109,10 +114,10 @@
             // Submit the form to trigger the controller action
             //document.getElementById('filterForm').submit();
         });
-        // 
+        // filter button active listener
         $('#filterForm').on('submit', function (e) {
             e.preventDefault(); // Prevent the default form submission
-
+            // ajax query to run the contoller method
             $.ajax({
                 type: 'POST',
                 url: $(this).attr('action'),

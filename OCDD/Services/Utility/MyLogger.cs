@@ -1,8 +1,7 @@
 ﻿/*
  * Dakoda Meade
- * CST-350
- * Activity 6-2
  * Logger class
+ * Not currently being ultilized
  * 
  */
 using NLog;

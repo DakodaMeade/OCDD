@@ -1,6 +1,8 @@
 ﻿@model OCDD.Models.UserModel
 
 @{
+    // User Registration view
+        // Form twith validation done wiith asp validation for user input
     ViewData["Title"] = "User Registration";
 }
 
@@ -78,7 +80,7 @@
             var password = form.querySelector('input[name="password"]').value;
             var confirmPassword = form.querySelector('#confirmPassword').value;
             var confirmPasswordError = form.querySelector('#confirmPasswordError');
-
+            // password match varification
             if (password !== confirmPassword) {
                 event.preventDefault();
                 confirmPasswordError.textContent = 'Passwords do not match.';
